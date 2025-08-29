@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landing Page</title>
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+
+</head>
+
+<body>
+  <img src="/images/wp2.png" class="bg-img">
+  
+  <div class="top-photos">
+      <img src="/images/danantara.png" alt="Foto 1">
+      <img src="/images/pln.png" alt="Foto 2">
+      <img src="/images/80.png" alt="Foto 3">
+  </div>
+
+  <div class="container">
+  <h1>{{ \App\Models\Setting::where('key', 'landing_title')->value('value') }}</h1>
+  <p>{{ \App\Models\Setting::where('key', 'landing_description')->value('value') }}</p>
+
+    <div class="buttons">
+        <button class="btn btn-login" onclick="openModal()">Formulir</button>
+    </div>
+    <p style="font-size: 12px; font-style: italic;">Tamu harap isi formulir terlebih dahulu</p>
+    
+  </div>
+
+    <!-- Modal -->
+    <div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Formulir Kunjungan Tamu</h2>
+        <form method="POST" id="submissionForm" autocomplete="off" action="{{ route('submission.store') }}">
+          @csrf
+          <div class="grid grid-cols-1 gap-3">
+
+            <!-- Nama -->
+            <div>
+                <label class="block text-sm font-medium">Nama*</label>
+                <input type="text" name="name" required class="border p-1 rounded w-full text-sm">
+            </div>
+
+            <!-- Alamat / Instansi -->
+            <div>
+                <label class="block text-sm font-medium">Alamat/Instansi*</label>
+                <input type="text" name="alamat" required class="border p-1 rounded w-full text-sm">
+            </div>
+
+            <!-- Jumlah Tamu & Keperluan -->
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="block text-sm font-medium">Jumlah Tamu*</label>
+                    <input type="number" id="angka" name="jumlah" required class="border p-1 rounded w-full text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium">Keperluan*</label>
+                    <input type="text" name="keperluan" required class="border p-1 rounded w-full text-sm">
+                </div>
+            </div>
+
+            <!-- Dropdown Unit -->
+            <div>
+                <label class="block text-sm font-medium">Tujuan Unit*</label>
+                <select id="unit" name="unit" class="border p-2 rounded w-full text-sm" required>
+                    <option value="">-- Pilih Unit --</option>
+                    <option value="UPT">UPT</option>
+                    <option value="UP2B">UP2B</option>
+                </select>
+                </div>
+
+                <!-- Dropdown Nama Tujuan -->
+                <div>
+                <label class="block text-sm font-medium">Tujuan PIC/Orang*</label>
+                <select id="tujuan_id" name="tujuan_id" class="w-full" required>
+                    <option value="">-- Pilih Nama --</option>
+                </select>
+            </div>
+
+
+            <!-- Bukti Identitas & Jenis Kendaraan -->
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="block text-sm font-medium">Bukti Identitas*</label>
+                    <select id="identitas" name="identitas" required class="border p-1 rounded w-full text-sm">
+                        <option value="">-- Pilih Bukti Identitas --</option>
+                        <option value="KTP">KTP</option>
+                        <option value="SIM">SIM</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium">Jenis Kendaraan*</label>
+                    <select name="nokartu" required class="border p-1 rounded w-full text-sm">
+                        <option value="">-- Pilih Jenis Kendaraan --</option>
+                        <option value="Roda 2">Roda 2</option>
+                        <option value="Roda 4">Roda 4</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- No Polisi Kendaraan -->
+            <div>
+                <label class="block text-sm font-medium">No Polisi Kendaraan*</label>
+                <input type="text" name="nopol" style="text-transform: uppercase;" required class="border p-1 rounded w-full text-sm">
+            </div>
+
+            <!-- Submit -->
+            <div>
+                <button type="submit" class="btn-submit bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition">Kirim</button>
+            </div>
+
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+<script>
+function openModal() {
+  document.getElementById("loginModal").style.display = "flex";
+}
+function closeModal() {
+  document.getElementById("loginModal").style.display = "none";
+}
+</script>
+<script>
+document.getElementById('submissionForm').addEventListener('submit', function(e){
+    e.preventDefault();
+
+    let form = e.target;
+    let formData = new FormData(form);
+
+    // Ambil unit & nama
+    const unit = formData.get('unit'); // value dari unit
+    const tujuanSelect = document.getElementById('tujuan_id');
+    const tujuanNama = tujuanSelect.options[tujuanSelect.selectedIndex].text; // text dari dropdown
+
+    formData.set('tujuan_id', unit + ' - ' + tujuanNama);
+    formData.set('name', formData.get('name').trim());
+    formData.set('nopol', formData.get('nopol').trim().toUpperCase());
+
+    fetch("{{ route('submission.store') }}", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success){
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: data.message,
+                confirmButtonColor: '#3085d6'
+            });
+            form.reset();
+            closeModal();
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: data.message || 'Terjadi kesalahan.'
+            });
+        }
+    })
+    .catch(err => console.error(err));
+});
+</script>
+
+
+<!-- // angka max 2 -->
+<script>
+  const input = document.getElementById('angka');
+
+  input.addEventListener('input', function() {
+    // hapus karakter non-digit
+    this.value = this.value.replace(/\D/g, '');
+    // batasi maksimal 2 digit
+    if (this.value.length > 2) {
+      this.value = this.value.slice(0, 2);
+    }
+  });
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // aktifkan TomSelect pada dropdown nama
+    new TomSelect("#tujuan_id",{
+        placeholder: "-- Pilih Nama --",
+        allowEmptyOption: true,
+        maxOptions: 500, // batasi jumlah hasil
+    });
+
+    // event saat unit dipilih
+    document.getElementById('unit').addEventListener('change', function() {
+        let unit = this.value;
+        let tujuanSelect = document.getElementById('tujuan_id').tomselect;
+
+        // reset dulu
+        tujuanSelect.clearOptions();
+        tujuanSelect.addOption({value: "", text: "-- Pilih Nama --"});
+
+        if(unit){
+            fetch('/get-tujuan/' + unit)
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(item => {
+                        tujuanSelect.addOption({
+                            value: item.id,
+                            text: item.nama
+                        });
+                    });
+                });
+        }
+    });
+});
+</script>
+
+
+</body>
+</html>

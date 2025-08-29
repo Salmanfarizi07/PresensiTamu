@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Laporan;
+
+class LaporanController extends Controller
+{
+    public function index(Request $request)
+    {
+        $laporans = Laporan::latest()->get();
+        return view('laporans.index', compact('laporans'));
+
+        // Jika ingin filter berdasarkan tanggal
+        $start = $request->start_date ?? now()->startOfMonth()->format('Y-m-d');
+        $end = $request->end_date ?? now()->format('Y-m-d');
+
+        $laporans = Laporan::whereBetween('created_at', [$start, $end])
+                            ->latest()
+                            ->get();
+
+        return view('laporans.index', compact('laporans', 'start', 'end'));
+    }
+
+    
+    public function data(Request $request)
+    {
+        $query = Laporan::query();
+
+        if($request->search) {
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', "%{$request->search}%")
+                ->orWhere('alamat', 'like', "%{$request->search}%")
+                ->orWhere('keperluan', 'like', "%{$request->search}%");
+            });
+        }
+
+        if($request->status) {
+            $query->where('status', $request->status);
+        }
+
+        if($request->per_page && $request->per_page != 'all') {
+            $laporans = $query->latest()->paginate($request->per_page);
+        } else {
+            $laporans = $query->latest()->get();
+        }
+
+        return view('laporans.partials.table', compact('laporans'));
+    }
+
+}
