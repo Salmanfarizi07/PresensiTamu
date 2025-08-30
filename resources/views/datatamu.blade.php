@@ -13,16 +13,15 @@
     </a>
 
     <!-- Filter -->
-    <form method="GET" action="{{ route('datatamu') }}" class="flex flex-col sm:flex-row sm:items-center gap-2 w-full md:w-auto">
+    <form id="filterForm" class="flex flex-col sm:flex-row sm:items-center gap-2 w-full md:w-auto">
         <label for="status" class="font-semibold text-gray-700">Filter Status:</label>
-        <select name="status" id="status" onchange="this.form.submit()" 
-            class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto">
+        <select name="status" id="status" class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto">
             <option value="">Semua</option>
             <option value="pending" {{ ($statusFilter ?? '') == 'pending' ? 'selected' : '' }}>Pending</option>
             <option value="aktif" {{ ($statusFilter ?? '') == 'aktif' ? 'selected' : '' }}>Aktif</option>
-            <option value="nonaktif" {{ ($statusFilter ?? '') == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
         </select>
     </form>
+
 </div>
 
 <div class="overflow-x-auto">
@@ -34,7 +33,6 @@
                 <th class="px-4 py-2">Alamat</th>
                 <th class="px-4 py-2">Jumlah</th>
                 <th class="px-4 py-2">Masuk</th>
-                <th class="px-4 py-2">Keluar</th>
                 <th class="px-4 py-2">Keperluan</th>
                 <th class="px-4 py-2">Tujuan</th>
                 <th class="px-4 py-2">Identitas</th>
@@ -53,7 +51,6 @@
                 <td class="px-4 py-2">{{ $item->alamat }}</td>
                 <td class="px-4 py-2">{{ $item->jumlah }}</td>
                 <td class="px-4 py-2">{{ $item->created_at->format('d M Y H:i') }}</td>
-                <td class="px-4 py-2">{{ $item->keluar }}</td>
                 <td class="px-4 py-2">{{ $item->keperluan }}</td>
                 <td class="px-4 py-2">{{ $item->tujuan_id }}</td>
                 <td class="px-4 py-2">{{ $item->identitas }}</td>
@@ -62,11 +59,11 @@
                 <td class="px-4 py-2">{{ $item->nopol }}</td>
                 <td class="px-4 py-2">
                     @if($item->status == 'pending')
-                        <span class="text-red-600 font-bold">Pending</span>
+                        <span class="text-red-600 font-bold">Menunggu</span>
                     @elseif($item->status == 'aktif')
-                        <span class="text-green-600 font-bold">Aktif</span>
+                        <span class="text-green-600 font-bold">Didalam</span>
                     @elseif($item->status == 'nonaktif')
-                        <span class="text-gray-600 font-bold">Nonaktif</span>
+                        <span class="text-gray-600 font-bold">Keluar</span>
                     @endif
                 </td>
                 
@@ -94,7 +91,7 @@
     </table>
 </div>
 
-<div class="mt-4">
+<!-- <div class="mt-4">
     <form action="{{ route('submission.resetNonaktif') }}" method="POST" onsubmit="return confirm('Yakin mau reset semua tamu nonaktif?');">
         @csrf
         @method('DELETE')
@@ -102,6 +99,25 @@
             🔄 Reset Data Nonaktif
         </button>
     </form>
-</div>
+</div> -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const statusSelect = document.getElementById('status');
+    const tableContainer = document.getElementById('tableContainer');
+
+    statusSelect.addEventListener('change', function() {
+        const status = this.value;
+
+        fetch("{{ route('datatamu') }}?status=" + status)
+            .then(response => response.text())
+            .then(html => {
+                // replace tabel dengan hasil partial
+                tableContainer.innerHTML = html;
+            })
+            .catch(err => console.error(err));
+    });
+});
+</script>
+
 
 @endsection

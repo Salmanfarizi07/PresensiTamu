@@ -110,8 +110,9 @@ class SubmissionController extends Controller
         $statusFilter = $request->get('status'); // ambil filter status
 
         $query = Submission::latest(); // urut berdasarkan created_at DESC
+        dd($statusFilter, $submissions->pluck('status'));
 
-        if ($statusFilter) {
+        if(in_array($statusFilter, ['aktif','pending'])) {
             $query->where('status', $statusFilter);
         }
 
@@ -119,6 +120,7 @@ class SubmissionController extends Controller
 
         return view('submission.datatamu', compact('submissions', 'statusFilter'));
     }
+
 
     
     
@@ -146,7 +148,6 @@ class SubmissionController extends Controller
             'id_kartu' => 'required|string|size:10',
         ]);
 
-        // Cari zone berdasarkan ID Kartu
         $zone = Zone::where('id_kartu', $request->id_kartu)->first();
 
         if (!$zone) {
@@ -157,20 +158,22 @@ class SubmissionController extends Controller
         }
 
         $tamu = Submission::findOrFail($id);
-        $tamu->status = 'aktif';
-        $tamu->daerah = $zone->nomor . '-' . $zone->zona; // nomor-zona
+        $tamu->status   = 'aktif';
+        $tamu->daerah   = $zone->nomor . '-' . $zone->zona; // nomor-zona
+        $tamu->id_kartu = $zone->id_kartu;                  // simpan ID Kartu asli
         $tamu->save();
 
         return response()->json([
             'success' => true,
             'message' => 'Tamu berhasil diaktifkan!',
             'tamu' => [
-                'name' => $tamu->name,
+                'name'   => $tamu->name,
                 'daerah' => $tamu->daerah,
                 'status' => $tamu->status
             ]
         ]);
     }
+
 
 
     public function resetNonaktif()

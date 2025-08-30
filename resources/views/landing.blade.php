@@ -36,95 +36,92 @@
   </div>
 
     <!-- Modal -->
+    <!-- Modal -->
     <div id="loginModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <h2>Formulir Kunjungan Tamu</h2>
         <form method="POST" id="submissionForm" autocomplete="off" action="{{ route('submission.store') }}">
-          @csrf
-          <div class="grid grid-cols-1 gap-3">
+        @csrf
 
-            <!-- Nama -->
+        <!-- Step 1 -->
+        <div id="step1">
+            <div class="grid grid-cols-1 gap-3">
             <div>
                 <label class="block text-sm font-medium">Nama*</label>
-                <input type="text" name="name" required class="border p-1 rounded w-full text-sm">
+                <input type="text" name="name" required class="border p-1 rounded w-full text-sm" required>
             </div>
-
-            <!-- Alamat / Instansi -->
             <div>
                 <label class="block text-sm font-medium">Alamat/Instansi*</label>
-                <input type="text" name="alamat" required class="border p-1 rounded w-full text-sm">
+                <input type="text" name="alamat" required class="border p-1 rounded w-full text-sm" required>
             </div>
-
-            <!-- Jumlah Tamu & Keperluan -->
             <div class="grid grid-cols-2 gap-2">
                 <div>
-                    <label class="block text-sm font-medium">Jumlah Tamu*</label>
-                    <input type="number" id="angka" name="jumlah" required class="border p-1 rounded w-full text-sm">
+                <label class="block text-sm font-medium">Jumlah Tamu*</label>
+                <input type="number" id="angka" name="jumlah" required class="border p-1 rounded w-full text-sm" required>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium">Keperluan*</label>
-                    <input type="text" name="keperluan" required class="border p-1 rounded w-full text-sm">
+                <label class="block text-sm font-medium">Keperluan*</label>
+                <input type="text" name="keperluan" required class="border p-1 rounded w-full text-sm" required>
                 </div>
             </div>
+            <button type="button" id="toStep2" class="btn-next">Selanjutnya →</button>
+            </div>
+        </div>
 
-            <!-- Dropdown Unit -->
+        <!-- Step 2 -->
+        <div id="step2" style="display:none;">
+            <div class="grid grid-cols-1 gap-3">
             <div>
                 <label class="block text-sm font-medium">Tujuan Unit*</label>
                 <select id="unit" name="unit" class="border p-2 rounded w-full text-sm" required>
-                    <option value="">-- Pilih Unit --</option>
-                    <option value="UPT">UPT</option>
-                    <option value="UP2B">UP2B</option>
+                <option value="">-- Pilih Unit --</option>
+                <option value="UPT">UPT</option>
+                <option value="UP2B">UP2B</option>
                 </select>
-                </div>
-
-                <!-- Dropdown Nama Tujuan -->
-                <div>
+            </div>
+            <div>
                 <label class="block text-sm font-medium">Tujuan PIC/Orang*</label>
                 <select id="tujuan_id" name="tujuan_id" class="w-full" required>
-                    <option value="">-- Pilih Nama --</option>
+                <option value="">-- Pilih Nama --</option>
                 </select>
             </div>
-
-
-            <!-- Bukti Identitas & Jenis Kendaraan -->
             <div class="grid grid-cols-2 gap-2">
                 <div>
-                    <label class="block text-sm font-medium">Bukti Identitas*</label>
-                    <select id="identitas" name="identitas" required class="border p-1 rounded w-full text-sm">
-                        <option value="">-- Pilih Bukti Identitas --</option>
-                        <option value="KTP">KTP</option>
-                        <option value="SIM">SIM</option>
-                        <option value="Lainnya">Lainnya</option>
-                    </select>
+                <label class="block text-sm font-medium">Bukti Identitas*</label>
+                <select id="identitas" name="identitas" required class="border p-1 rounded w-full text-sm">
+                    <option value="">-- Pilih Bukti Identitas --</option>
+                    <option value="KTP">KTP</option>
+                    <option value="SIM">SIM</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium">Jenis Kendaraan*</label>
-                    <select name="nokartu" required class="border p-1 rounded w-full text-sm">
-                        <option value="">-- Pilih Jenis Kendaraan --</option>
-                        <option value="Roda 2">Roda 2</option>
-                        <option value="Roda 4">Roda 4</option>
-                        <option value="Lainnya">Lainnya</option>
-                    </select>
+                <label class="block text-sm font-medium">Jenis Kendaraan*</label>
+                <select name="nokartu" required class="border p-1 rounded w-full text-sm">
+                    <option value="">-- Pilih Jenis Kendaraan --</option>
+                    <option value="Roda 2">Roda 2</option>
+                    <option value="Roda 4">Roda 4</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
                 </div>
             </div>
-
-            <!-- No Polisi Kendaraan -->
             <div>
                 <label class="block text-sm font-medium">No Polisi Kendaraan*</label>
                 <input type="text" name="nopol" style="text-transform: uppercase;" required class="border p-1 rounded w-full text-sm">
             </div>
-
-            <!-- Submit -->
-            <div>
-                <button type="submit" class="btn-submit bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition">Kirim</button>
+            <div class="flex-btns">
+                <button type="submit" class="btn-submit">Kirim</button>
+                <button type="button" id="backStep1" class="btn-back">Kembali</button>
             </div>
 
+            </div>
         </div>
 
-      </form>
-
+        </form>
     </div>
+    </div>
+
   </div>
 
 <script>
@@ -227,6 +224,32 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
         }
     });
+});
+</script>
+
+<script>
+document.getElementById('toStep2').addEventListener('click', function() {
+    const step1 = document.getElementById('step1');
+    const inputs = step1.querySelectorAll('input[required]');
+    let valid = true;
+    let emptyFields = [];
+
+    inputs.forEach(input => {
+        if(!input.value.trim()){
+            valid = false;
+            emptyFields.push(input.previousElementSibling.innerText.replace('*',''));
+            input.classList.add('border-red-500'); // optional tanda merah
+        } else {
+            input.classList.remove('border-red-500');
+        }
+    });
+
+    if(valid){
+        step1.style.display = 'none';
+        document.getElementById('step2').style.display = 'block';
+    } else {
+        alert("Mohon isi field berikut terlebih dahulu:");
+    }
 });
 </script>
 
