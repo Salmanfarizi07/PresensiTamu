@@ -42,7 +42,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard');
     Route::get('/dashboard/data', [DashboardController::class, 'data'])->name('dashboard.data');
     Route::get('/datatamu', [DashboardController::class,'dataTamu'])->name('datatamu');
-    Route::get('/usermain', [SubmissionController::class, 'usermain'])->name('usermain');
+    //Route::get('/usermain', [SubmissionController::class, 'usermain'])->name('usermain');
     Route::get('/datauser', [DashboardController::class,'dataUser'])->name('datauser');
     // Route::get('/laporan', [SubmissionController::class, 'laporanNonaktif'])->name('laporan');
     Route::get('/pengaturan', [DashboardController::class,'pengaturan'])->name('pengaturan');
@@ -90,6 +90,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/tujuans/{tujuan}', [TujuanController::class, 'update'])->name('tujuans.update');
     Route::delete('/tujuans/{tujuan}', [TujuanController::class, 'destroy'])->name('tujuans.destroy');
     Route::get('/tujuans/pdf', [TujuanController::class, 'picPdf'])->name('tujuans.picPdf');
+    Route::post('/tujuans/import', [TujuanController::class, 'import'])->name('tujuans.import');
+    Route::get('/tujuans/export', [TujuanController::class, 'export'])->name('tujuans.export');
+
     // Route::get('/tujuans/pdf/{unit}', [TujuanController::class, 'picPdf'])->name('tujuans.picPdf');
 
 
@@ -100,6 +103,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Laporan
     Route::get('/laporans', [LaporanController::class, 'index'])->name('laporans');
     Route::get('/laporans/data', [LaporanController::class, 'data'])->name('laporans.data'); // <-- AJAX
+    // Export laporan semua / per unit
+    Route::get('/laporans/export', [LaporanController::class, 'export'])->name('laporans.export');
+
 
     // Setting
     Route::get('/setting', [SettingController::class, 'edit'])->name('setting');

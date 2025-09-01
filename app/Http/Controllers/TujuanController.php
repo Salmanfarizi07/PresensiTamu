@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Tujuan;
 use App\Models\Submission;
 use Mpdf\Mpdf;
+use App\Imports\TujuanImport;
+use App\Exports\TujuanExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TujuanController extends Controller
 {
@@ -14,11 +17,16 @@ class TujuanController extends Controller
     public function index(Request $request)
     {
         $unitFilter = $request->unit;
+        $tujuans = Tujuan::all();
 
         // Ambil semua tujuan sesuai filter (opsional)
         $tujuans = Tujuan::when($unitFilter, function($query) use ($unitFilter) {
             $query->where('unit', $unitFilter);
         })->get();
+        
+        $counts = Tujuan::select('unit', DB::raw('count(*) as total'))
+                    ->groupBy('unit')
+                    ->get();
 
         // Hitung total kunjungan per unit
         $rekapKunjunganPerUnitQuery = DB::table('submissions')
@@ -32,7 +40,7 @@ class TujuanController extends Controller
 
         $rekapKunjunganPerUnit = $rekapKunjunganPerUnitQuery->pluck('total_kunjungan', 'unit');
 
-        return view('tujuans.index', compact('tujuans', 'rekapKunjunganPerUnit', 'unitFilter'));
+        return view('tujuans.index', compact('tujuans', 'rekapKunjunganPerUnit', 'unitFilter', 'counts'));
     }
 
     // Form tambah tujuan
@@ -125,7 +133,22 @@ class TujuanController extends Controller
         $mpdf->WriteHTML($html);
         $mpdf->Output("tujuan_{$unit}.pdf", 'I'); // 'I' untuk stream ke browser, 'D' untuk download
     }
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv,xls'
+        ]);
 
+        Excel::import(new TujuanImport, $request->file('file'));
 
+        return redirect()->back()->with('success', 'Data tujuan berhasil diimport!');
+    }
+    public function export(Request $request)
+    {
+        $unit = $request->get('unit'); // bisa null, UPT, atau UP2B
+        $filename = $unit ? "datapegawai_{$unit}.xlsx" : "datapegawai_all.xlsx";
+
+        return Excel::download(new TujuanExport($unit), $filename);
+    }
 
 }

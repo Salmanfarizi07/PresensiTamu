@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <style>
         body {
             background: linear-gradient(135deg, #6c63ff, #4facfe);
@@ -64,14 +66,30 @@
             @enderror
         </div>
 
-        <div class="mb-3">
+        <!-- <div class="mb-3">
             <label for="password" class="form-label">Password</label>
             <input id="password" type="password" name="password" 
                    class="form-control @error('password') is-invalid @enderror" required>
             @error('password')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
+        </div> -->
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-group">
+                <input id="password" type="password" name="password" 
+                    class="form-control @error('password') is-invalid @enderror" required>
+                <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                    <i class="fa fa-eye"></i>
+                </button>
+                @error('password')
+                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                @enderror
+            </div>
         </div>
+
+
+
 
         <div class="mb-3 form-check">
             <input type="checkbox" name="remember" id="remember" class="form-check-input">
@@ -88,5 +106,21 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('togglePassword').addEventListener('click', function () {
+        const passwordInput = document.getElementById('password');
+        const icon = this.querySelector('i');
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = "password";
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    });
+</script>
 </body>
 </html>

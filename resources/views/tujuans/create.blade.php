@@ -22,14 +22,14 @@
     </div>
 
     <!-- Jabatan -->
-    <div class="mb-4">
+    <!-- <div class="mb-4">
         <label class="block mb-1 font-semibold">Jabatan</label>
         <input type="text" name="jabatan" value="{{ old('jabatan') }}" 
-               class="w-full border px-3 py-2 rounded" required>
+               class="w-full border px-3 py-2 rounded">
         @error('jabatan')
             <span class="text-red-500 text-sm">{{ $message }}</span>
         @enderror
-    </div>
+    </div> -->
 
     <!-- Unit -->
     <div class="mb-4">

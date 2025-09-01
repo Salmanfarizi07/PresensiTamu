@@ -1,8 +1,8 @@
 @extends('layouts.app')
-@section('title','Data Kartu Daerah')
+@section('title','Data Kartu Zona')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-6">Data Kartu Daerah</h1>
+<h1 class="text-2xl font-bold mb-6">Data Kartu Zona</h1>
 
 <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-2 md:gap-0">
     <!-- Tombol Tambah Data -->

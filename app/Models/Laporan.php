@@ -11,7 +11,7 @@ class Laporan extends Model
 
     protected $fillable = [
         'name','alamat','jumlah','keluar','keperluan','identitas',
-        'daerah','nokartu','nopol','status'
+        'daerah','nokartu','nopol','status', 'tujuan_id'
     ];
 }
 

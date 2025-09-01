@@ -41,7 +41,8 @@ class DashboardController extends Controller
                     $q->where('name', 'like', "%{$search}%")
                     ->orWhere('alamat', 'like', "%{$search}%")
                     ->orWhere('keperluan', 'like', "%{$search}%")
-                    ->orWhere('daerah', 'like', "%{$search}%");
+                    ->orWhere('daerah', 'like', "%{$search}%")
+                    ->orWhere('nopol', 'like', "%{$search}%");
                 });
             }
         }
@@ -77,7 +78,8 @@ class DashboardController extends Controller
                     $q->where('name', 'like', "%{$search}%")
                     ->orWhere('alamat', 'like', "%{$search}%")
                     ->orWhere('keperluan', 'like', "%{$search}%")
-                    ->orWhere('daerah', 'like', "%{$search}%");
+                    ->orWhere('daerah', 'like', "%{$search}%")
+                    ->orWhere('nopol', 'like', "%{$search}%");
                 });
             }
         }
@@ -92,9 +94,10 @@ class DashboardController extends Controller
         $totalTamu         = Submission::count();
         $totalHariIni      = Submission::whereDate('created_at', now()->toDateString())->count();
         $latestTamu        = Submission::latest()->first();
-        $totalTamuAktif    = Submission::where('status', 'aktif')->count();
+        $totalTamuAktif = Submission::where('status', 'aktif')->sum('jumlah');
+        //$totalTamuAktif    = Submission::where('status', 'aktif')->count();
         $totalTamuPending  = Submission::where('status', 'pending')->count();
-        $totalTamuNonAktif = Submission::where('status', 'nonaktif')->count();
+        $totalTamuNonAktif = Submission::where('status', 'nonaktif')->sum('jumlah');
 
         return view('dashboard', compact(
             'status','search','perPage','submissions',

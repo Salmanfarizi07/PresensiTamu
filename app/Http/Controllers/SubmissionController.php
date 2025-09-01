@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Submission;
 use App\Models\Zone;
@@ -122,8 +122,8 @@ class SubmissionController extends Controller
     }
 
 
-    
-    
+
+
     // Tombol "Selesaikan Presensi"
     public function selesai(Request $request, $id) 
     {
@@ -142,6 +142,38 @@ class SubmissionController extends Controller
 
     }
 
+    // public function accPending(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'id_kartu' => 'required|string|size:10',
+    //     ]);
+
+    //     $zone = Zone::where('id_kartu', $request->id_kartu)->first();
+
+    //     if (!$zone) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'ID Kartu tidak valid!'
+    //         ], 404);
+    //     }
+
+    //     $tamu = Submission::findOrFail($id);
+    //     $tamu->status   = 'aktif';
+    //     $tamu->daerah   = $zone->nomor . '-' . $zone->zona; // nomor-zona
+    //     $tamu->id_kartu = $zone->id_kartu;                  // simpan ID Kartu asli
+    //     $tamu->save();
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Tamu berhasil diaktifkan!',
+    //         'tamu' => [
+    //             'name'   => $tamu->name,
+    //             'daerah' => $tamu->daerah,
+    //             'status' => $tamu->status
+    //         ]
+    //     ]);
+    // }
+
     public function accPending(Request $request, $id)
     {
         $request->validate([
@@ -155,6 +187,18 @@ class SubmissionController extends Controller
                 'success' => false,
                 'message' => 'ID Kartu tidak valid!'
             ], 404);
+        }
+
+        // Cek apakah kartu ini sudah dipakai submission aktif lain
+        $dipakai = Submission::where('id_kartu', $zone->id_kartu)
+                    ->where('status', 'aktif')
+                    ->exists();
+
+        if ($dipakai) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kartu ini sedang digunakan, harap gunakan kartu lain.'
+            ], 400);
         }
 
         $tamu = Submission::findOrFail($id);
@@ -241,6 +285,72 @@ class SubmissionController extends Controller
             ]
         ]);
     }
+
+    // public function checkout(Request $request)
+    // {
+    //     $request->validate([
+    //         'id_kartu' => 'required|string|size:10',
+    //         'submission_id' => 'nullable|integer',
+    //     ]);
+
+    //     if ($request->submission_id) {
+    //         // Cari data berdasarkan submission_id
+    //         $tamu = Submission::find($request->submission_id);
+
+    //         if (!$tamu) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Data tamu tidak ditemukan.'
+    //             ], 404);
+    //         }
+
+    //         // Pastikan id_kartu sesuai
+    //         if ($tamu->id_kartu !== $request->id_kartu) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'ID Kartu tidak sesuai dengan tamu yang dipilih!'
+    //             ], 400);
+    //         }
+    //     } else {
+    //         // Cara lama: cari langsung berdasarkan id_kartu
+    //         $tamu = Submission::where('id_kartu', $request->id_kartu)
+    //                         ->where('status', 'aktif')
+    //                         ->first();
+
+    //         if (!$tamu) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Tidak ada tamu aktif dengan kartu ini.'
+    //             ], 404);
+    //         }
+    //     }
+
+    //     // Pastikan masih aktif
+    //     if ($tamu->status !== 'aktif') {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Tamu ini sudah nonaktif.'
+    //         ], 400);
+    //     }
+
+    //     // Update status jadi nonaktif (checkout)
+    //     $tamu->status = 'nonaktif';
+    //     $tamu->keluar = now()->format('H:i');
+    //     $tamu->save();
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Tamu berhasil checkout!',
+    //         'tamu' => [
+    //             'name' => $tamu->name,
+    //             'identitas' => $tamu->identitas,
+    //             'daerah' => $tamu->daerah,
+    //         ]
+    //     ]);
+    // }
+
+
+
 
     public function confirmCheckout(Request $request)
     {

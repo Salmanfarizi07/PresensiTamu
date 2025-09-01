@@ -55,7 +55,7 @@
 
         <!-- Search -->
         <input id="searchInput" type="text" name="search" value="{{ request('search') }}"
-            placeholder="Cari tap kartu/ketik nama"
+            placeholder="Cari kartu, nama, alamat, keperluan dan no kendaraan disini.."
             class="p-2 rounded-lg border border-gray-300 w-64">
 
         <!-- Per Page -->
@@ -88,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Hitung lastCount dari jumlah row di table saat pertama load
     let lastCount = {{ $submissions instanceof \Illuminate\Pagination\LengthAwarePaginator ? $submissions->total() : $submissions->count() }};
 
-
     function fetchData(checkNew = false) {
         const params = new URLSearchParams({
             search: searchInput ? searchInput.value : '',
@@ -97,12 +96,12 @@ document.addEventListener('DOMContentLoaded', function () {
             check_new: checkNew ? 1 : 0
         });
 
-        fetch("{{ route('dashboard.data') }}?" + params.toString())
+        return fetch("{{ route('dashboard.data') }}?" + params.toString())
             .then(res => checkNew ? res.json() : res.text())
             .then(data => {
-                if(checkNew){
+                if (checkNew) {
                     // cek jika count berubah
-                    if(data.count > lastCount){
+                    if (data.count > lastCount) {
                         tableContainer.innerHTML = data.html;
                         lastCount = data.count;
                         Swal.fire({
@@ -114,8 +113,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         });
                     }
                 } else {
+                    // render manual (search/filter)
                     tableContainer.innerHTML = data;
-                    // update lastCount sesuai data yang ditampilkan
                     lastCount = tableContainer.querySelectorAll('tbody tr').length;
                 }
             })
@@ -123,21 +122,27 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Event listener filter / search
-    if(searchInput){
+    if (searchInput) {
         let timeout = null;
         searchInput.addEventListener('keyup', () => {
             clearTimeout(timeout);
             timeout = setTimeout(() => fetchData(false), 300);
         });
     }
-    if(statusFilter) statusFilter.addEventListener('change', () => fetchData(false));
-    if(perPageFilter) perPageFilter.addEventListener('change', () => fetchData(false));
+    if (statusFilter) statusFilter.addEventListener('change', () => fetchData(false));
+    if (perPageFilter) perPageFilter.addEventListener('change', () => fetchData(false));
 
-    // Auto-refresh setiap 5 detik untuk cek data baru
-    setInterval(() => {
-        fetchData(true);
-    }, 5000);
+    // Auto-check data baru (pakai setTimeout biar tidak bentrok)
+    function checkNewData() {
+        fetchData(true).finally(() => {
+            setTimeout(checkNewData, 5000); // cek lagi setelah 5 detik
+        });
+    }
+
+    // Mulai auto-check
+    checkNewData();
 });
 </script>
+
 
 @endsection

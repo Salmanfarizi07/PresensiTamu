@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('jumlah')->nullable();
             $table->string('keluar')->nullable();
             $table->string('keperluan')->nullable();
+            $table->string('tujuan_id')->nullable();
             $table->string('identitas')->nullable();
             $table->string('daerah')->nullable();
             $table->string('nokartu')->nullable();

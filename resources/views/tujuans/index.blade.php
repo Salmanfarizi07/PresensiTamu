@@ -1,24 +1,35 @@
 @extends('layouts.app')
-@section('title','Data PIC')
+@section('title','Data Pegawai')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-6">Data PIC</h1>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+
+
+<h1 class="text-2xl font-bold mb-6">Data Pegawai</h1>
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-5">
-    @foreach($rekapKunjunganPerUnit as $unit => $total)
-    <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 transition duration-300 hover:border-blue-500 hover:shadow-md cursor-pointer flex items-center justify-between">
+    @foreach($counts as $c)
+    <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 
+                transition duration-300 hover:border-blue-500 hover:shadow-md 
+                cursor-pointer flex items-center justify-between">
         
         <!-- Icon Kiri -->
         <div class="flex-shrink-0">
-            <p class="text-sm font-medium text-gray-700">Total Kunjungan</p>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-blue-600">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 8.25h18M4.5 21h15a1.5 1.5 0 001.5-1.5V7.5a1.5 1.5 0 00-1.5-1.5h-15A1.5 1.5 0 003 7.5v12a1.5 1.5 0 001.5 1.5z" />
+            <p class="text-sm font-medium text-gray-700">Total Data Pegawai</p>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" 
+                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" 
+                 class="w-10 h-10 text-blue-600">
+                <path stroke-linecap="round" stroke-linejoin="round" 
+                      d="M6.75 3v2.25M17.25 3v2.25M3 8.25h18M4.5 21h15a1.5 1.5 
+                      0 001.5-1.5V7.5a1.5 1.5 0 00-1.5-1.5h-15A1.5 1.5 
+                      0 003 7.5v12a1.5 1.5 0 001.5 1.5z" />
             </svg>
         </div>
 
         <!-- Text Kanan -->
         <div class="text-right">
-            <h2 class="text-xl font-medium text-gray-500">{{ $unit }}</h2>
-            <p class="text-4xl font-bold text-blue-700">{{ $total }}</p>
+            <h2 class="text-xl font-medium text-gray-500">{{ $c->unit }}</h2>
+            <p class="text-4xl font-bold text-blue-700">{{ $c->total }}</p>
         </div>
     </div>
     @endforeach
@@ -32,6 +43,36 @@
            class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition text-center">
             Tambah Data
         </a>
+        <!-- Import -->
+        <form id="importForm" action="{{ route('tujuans.import') }}" method="POST" enctype="multipart/form-data" class="w-full sm:w-auto">
+            @csrf
+            <input type="file" name="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display:none" required>
+            
+            <button type="button" id="importBtn" 
+                    class="w-full sm:w-auto bg-green-500 text-white px-4 py-2 rounded-lg">
+                Import File
+            </button>
+        </form>
+
+        <!-- Export -->
+        <div class="relative inline-block text-left group w-full sm:w-auto">
+            <button class="w-full sm:w-auto bg-green-500 text-white px-4 py-2 rounded inline-flex items-center justify-center sm:justify-start">
+                Unduh Data
+                <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+
+            <!-- Dropdown menu -->
+            <div class="absolute hidden group-hover:block bg-white border rounded shadow-lg mt-1 w-full sm:w-40 z-50">
+                <a href="{{ route('tujuans.export', ['unit' => 'UPT']) }}" 
+                class="block px-4 py-2 hover:bg-gray-100">Export UPT</a>
+                <a href="{{ route('tujuans.export', ['unit' => 'UP2B']) }}" 
+                class="block px-4 py-2 hover:bg-gray-100">Export UP2B</a>
+                <a href="{{ route('tujuans.export') }}" 
+                class="block px-4 py-2 hover:bg-gray-100">Export Semua</a>
+            </div>
+        </div>
 
         <!-- Filter Unit -->
         <form method="GET" action="{{ route('tujuans.index') }}" 
@@ -45,44 +86,6 @@
             </select>
         </form>
     </div>
-
-    <!-- Kanan: Download PDF -->
-    <form action="{{ route('tujuans.picPdf') }}" method="GET" target="_blank" 
-          class="flex flex-wrap items-center gap-2">
-
-        <!-- Pilih Unit -->
-        <select name="unit" id="unit" 
-                class="p-3 rounded-lg border border-gray-300 focus:ring-1 focus:ring-blue-500" required>
-            <option value="UPT">UPT</option>
-            <option value="UP2B">UP2B</option>
-        </select>
-
-        <!-- Pilih Filter Periode -->
-        <select name="filter" id="filter" 
-                class="p-3 rounded-lg border border-gray-300 focus:ring-1 focus:ring-blue-500"
-                onchange="toggleDates(this.value)">
-            <option value="today">Hari Ini</option>
-            <option value="week">Minggu Ini</option>
-            <option value="month">Bulan Ini</option>
-            <option value="range">Periode</option>
-        </select>
-
-        <!-- Input Periode Manual -->
-        <input type="date" name="start_date" id="start_date" 
-            class="p-3 rounded-lg border border-gray-300 hidden">
-        <input type="date" name="end_date" id="end_date" 
-            class="p-3 rounded-lg border border-gray-300 hidden">
-
-        <!-- Tombol PDF -->
-        <button type="submit"
-                class="flex items-center gap-1 bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12v8m0 0l-4-4m4 4l4-4M12 4v8" />
-            </svg>
-            PDF
-        </button>
-    </form>
 </div>
 
 
@@ -92,7 +95,7 @@
             <tr>
                 <th class="px-4 py-2 text-left">No</th>
                 <th class="px-4 py-2 text-left">Nama</th>
-                <th class="px-4 py-2 text-left">Jabatan</th>
+                <!-- <th class="px-4 py-2 text-left">Jabatan</th> -->
                 <th class="px-4 py-2 text-left">Unit</th>
                 <th class="px-4 py-2 text-left">Aksi</th>
             </tr>
@@ -102,7 +105,7 @@
             <tr class="text-gray-800 border-b">
                 <td class="px-4 py-2">{{ $i + 1 }}</td>
                 <td class="px-4 py-2">{{ $item->nama }}</td>
-                <td class="px-4 py-2">{{ $item->jabatan }}</td>
+                <!-- <td class="px-4 py-2">{{ $item->jabatan }}</td> -->
                 <td class="px-4 py-2">
                     @if($item->unit == 'UPT')
                         <span class="text-blue-500 font-semibold">{{ $item->unit }}</span>
@@ -155,4 +158,42 @@ function toggleDates(value) {
     }
 }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.getElementById('importBtn').addEventListener('click', function() {
+    // buka dialog pilih file
+    document.getElementById('fileInput').click();
+});
+
+document.getElementById('fileInput').addEventListener('change', function() {
+    if (this.files.length > 0) {
+        document.getElementById('importForm').submit();
+    }
+});
+</script>
+
+@if(session('success'))
+<script>
+    Swal.fire({
+        title: 'Berhasil!',
+        text: "{{ session('success') }}",
+        icon: 'success',
+        confirmButtonText: 'OK'
+    });
+</script>
+@endif
+
+@if(session('error'))
+<script>
+    Swal.fire({
+        title: 'Gagal!',
+        text: "{{ session('error') }}",
+        icon: 'error',
+        confirmButtonText: 'OK'
+    });
+</script>
+@endif
+
+
 @endsection

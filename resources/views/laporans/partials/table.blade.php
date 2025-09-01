@@ -8,6 +8,7 @@
             <th class="px-4 py-2">Masuk</th>
             <th class="px-4 py-2">Keluar</th>
             <th class="px-4 py-2">Keperluan</th>
+            <th class="px-4 py-2">Tujuan</th>
             <th class="px-4 py-2">Identitas</th>
             <th class="px-4 py-2">No Daerah</th>
             <th class="px-4 py-2">Jenis Kendaraan</th>
@@ -24,6 +25,7 @@
             <td class="px-4 py-2">{{ $item->created_at->format('d M Y H:i') }}</td>
             <td class="px-4 py-2">{{ $item->keluar ?? '-' }}</td>
             <td class="px-4 py-2">{{ $item->keperluan ?? '-' }}</td>
+            <td class="px-4 py-2">{{ $item->tujuan_id ?? '-' }}</td>
             <td class="px-4 py-2">{{ $item->identitas ?? '-' }}</td>
             <td class="px-4 py-2">{{ $item->daerah ?? '-' }}</td>
             <td class="px-4 py-2">{{ $item->nokartu ?? '-' }}</td>
@@ -36,4 +38,10 @@
         @endforelse
     </tbody>
 </table>
+@if($laporans instanceof \Illuminate\Pagination\LengthAwarePaginator)
+    <div class="mt-2">
+        {{ $laporans->links() }}
+    </div>
+@endif
+
 

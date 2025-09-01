@@ -74,7 +74,7 @@
     </a>
     <a href="{{ route('zones') }}">
         <i data-lucide="map" class="w-5 h-5"></i>
-        <span class="text">Data Kartu Daerah</span>
+        <span class="text">Data Kartu Zona</span>
     </a>
     <a href="{{ route('laporans') }}">
         <i data-lucide="file-text" class="w-5 h-5"></i>
@@ -86,7 +86,7 @@
     </a>
     <a href="{{ route('tujuans.index') }}">
         <i data-lucide="airplay" class="w-5 h-5"></i>
-        <span class="text">PIC</span>
+        <span class="text">Data Pegawai</span>
     </a>
     <a href="{{ route('setting') }}">
         <i data-lucide="settings" class="w-5 h-5"></i>

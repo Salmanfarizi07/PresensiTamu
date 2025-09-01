@@ -4,13 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Laporan;
+use App\Models\Submission;
+use App\Exports\LaporanExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LaporanController extends Controller
 {
     public function index(Request $request)
     {
         $laporans = Laporan::latest()->get();
-        return view('laporans.index', compact('laporans'));
+        $laporans = Laporan::latest()->paginate(10);
+
+    // total kunjungan (jumlah kolom 'jumlah' di tabel laporans)
+        $totalKunjungan = Laporan::sum('jumlah');
+        return view('laporans.index', compact('laporans', 'totalKunjungan'));
 
         // Jika ingin filter berdasarkan tanggal
         $start = $request->start_date ?? now()->startOfMonth()->format('Y-m-d');
@@ -32,7 +39,8 @@ class LaporanController extends Controller
             $query->where(function($q) use ($request) {
                 $q->where('name', 'like', "%{$request->search}%")
                 ->orWhere('alamat', 'like', "%{$request->search}%")
-                ->orWhere('keperluan', 'like', "%{$request->search}%");
+                ->orWhere('keperluan', 'like', "%{$request->search}%")
+                ->orWhere('nopol', 'like', "%{$request->search}%");
             });
         }
 
@@ -48,5 +56,21 @@ class LaporanController extends Controller
 
         return view('laporans.partials.table', compact('laporans'));
     }
+
+    public function laporan()
+    {
+        $laporans = Laporan::latest()->paginate(10);
+
+        // Hitung total kunjungan dari semua data laporan
+        $totalKunjungan = Laporan::sum('jumlah');
+
+        return view('laporan.index', compact('laporans', 'totalKunjungan'));
+    }
+    
+    public function export()
+    {
+        return Excel::download(new LaporanExport, 'laporans.xlsx');
+    }
+
 
 }

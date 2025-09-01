@@ -4,25 +4,39 @@
 @section('content')
 <h1 class="text-2xl font-bold font-mont mb-6">Data Tamu</h1>
 
+<div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
+    
+    <!-- Kolom Kiri: Tambah Data + Filter -->
+    <div class="flex flex-col sm:flex-row items-center gap-3">
+        <!-- Tombol Tambah Data -->
+        <a href="/submission/add" 
+           class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition text-center">
+            Tambah Data
+        </a>
 
-<div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-2 md:gap-0">
-    <!-- Tombol Tambah Data -->
-    <a href="/submission/add" 
-       class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition text-center">
-        Tambah Data
-    </a>
+        <!-- Filter -->
+        <form id="filterForm" class="flex items-center gap-2">
+            <select name="status" id="status" 
+                    class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
+                <option value="">Semua</option>
+                <option value="pending" {{ ($statusFilter ?? '') == 'pending' ? 'selected' : '' }}>Pending</option>
+                <option value="aktif" {{ ($statusFilter ?? '') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+            </select>
+        </form>
+    </div>
 
-    <!-- Filter -->
-    <form id="filterForm" class="flex flex-col sm:flex-row sm:items-center gap-2 w-full md:w-auto">
-        <label for="status" class="font-semibold text-gray-700">Filter Status:</label>
-        <select name="status" id="status" class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto">
-            <option value="">Semua</option>
-            <option value="pending" {{ ($statusFilter ?? '') == 'pending' ? 'selected' : '' }}>Pending</option>
-            <option value="aktif" {{ ($statusFilter ?? '') == 'aktif' ? 'selected' : '' }}>Aktif</option>
-        </select>
+    <!-- Kolom Kanan: Reset Data Nonaktif -->
+    <form action="{{ route('submission.resetNonaktif') }}" method="POST" 
+          onsubmit="return confirm('Yakin mau reset semua tamu nonaktif?');">
+        @csrf
+        @method('DELETE')
+        <button type="submit" 
+                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow">
+            Reset Data Nonaktif
+        </button>
     </form>
-
 </div>
+
 
 <div class="overflow-x-auto">
     <table class="min-w-full bg-white shadow rounded-lg text-sm">
@@ -91,15 +105,7 @@
     </table>
 </div>
 
-<!-- <div class="mt-4">
-    <form action="{{ route('submission.resetNonaktif') }}" method="POST" onsubmit="return confirm('Yakin mau reset semua tamu nonaktif?');">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow w-full sm:w-auto">
-            🔄 Reset Data Nonaktif
-        </button>
-    </form>
-</div> -->
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const statusSelect = document.getElementById('status');
