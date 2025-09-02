@@ -68,7 +68,7 @@
         <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
         <span class="text">Dashboard</span>
     </a>
-    <a href="{{ route('datatamu') }}">
+    <a href="{{ route('submission.datatamu') }}">
         <i data-lucide="notebook" class="w-5 h-5"></i>
         <span class="text">Data Tamu</span>
     </a>

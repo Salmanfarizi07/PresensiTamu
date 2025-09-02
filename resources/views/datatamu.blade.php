@@ -6,124 +6,100 @@
 
 <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
     
-    <!-- Kolom Kiri: Tambah Data + Filter -->
-    <div class="flex flex-col sm:flex-row items-center gap-3">
+    <!-- Kolom Kiri: Tambah Data + Search + Filter -->
+    <div class="flex flex-col sm:flex-row flex-wrap items-stretch gap-3 w-full md:w-auto">
+
         <!-- Tombol Tambah Data -->
         <a href="/submission/add" 
-           class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition text-center">
+           class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition text-center w-full sm:w-auto">
             Tambah Data
         </a>
 
-        <!-- Filter -->
-        <form id="filterForm" class="flex items-center gap-2">
-            <select name="status" id="status" 
-                    class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
-                <option value="">Semua</option>
-                <option value="pending" {{ ($statusFilter ?? '') == 'pending' ? 'selected' : '' }}>Pending</option>
-                <option value="aktif" {{ ($statusFilter ?? '') == 'aktif' ? 'selected' : '' }}>Aktif</option>
-            </select>
-        </form>
+        <!-- Search -->
+        <input type="text" id="search" name="search" placeholder="Cari nama, alamat, keperluan atau no kendaraan..." 
+               class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 w-full sm:w-60">
+
+        <!-- Filter Status -->
+        <select name="status" id="status" 
+                class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 w-full sm:w-auto">
+            <option value="">Semua</option>
+            <option value="pending">Pending</option>
+            <option value="aktif">Aktif</option>
+        </select>
+
+        <!-- Per Page -->
+        <select name="perPage" id="perPage" 
+                class="border border-gray-300 text-center rounded-lg px-1 py-2 focus:ring-2 focus:ring-blue-400 w-full sm:w-auto">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="all">Semua</option>
+        </select>
     </div>
 
     <!-- Kolom Kanan: Reset Data Nonaktif -->
     <form action="{{ route('submission.resetNonaktif') }}" method="POST" 
-          onsubmit="return confirm('Yakin mau reset semua tamu nonaktif?');">
+          onsubmit="return confirm('Yakin mau reset semua tamu nonaktif?');"
+          class="w-full md:w-auto">
         @csrf
         @method('DELETE')
         <button type="submit" 
-                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow">
+                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow w-full md:w-auto">
             Reset Data Nonaktif
         </button>
     </form>
 </div>
 
 
-<div class="overflow-x-auto">
-    <table class="min-w-full bg-white shadow rounded-lg text-sm">
-        <thead class="bg-blue-600 text-white">
-            <tr>
-                <th class="px-4 py-2">No</th>
-                <th class="px-4 py-2">Nama</th>
-                <th class="px-4 py-2">Alamat</th>
-                <th class="px-4 py-2">Jumlah</th>
-                <th class="px-4 py-2">Masuk</th>
-                <th class="px-4 py-2">Keperluan</th>
-                <th class="px-4 py-2">Tujuan</th>
-                <th class="px-4 py-2">Identitas</th>
-                <th class="px-4 py-2">No Daerah Bebas/Terbatas</th>
-                <th class="px-4 py-2">Kendaraan</th>
-                <th class="px-4 py-2">No Polisi</th>
-                <th class="px-4 py-2">Status</th>
-                <th class="px-4 py-2">Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($submissions as $i => $item)
-            <tr class="text-gray-800 border-b">
-                <td class="px-4 py-2">{{ $i+1 }}</td>
-                <td class="px-4 py-2">{{ $item->name }}</td>
-                <td class="px-4 py-2">{{ $item->alamat }}</td>
-                <td class="px-4 py-2">{{ $item->jumlah }}</td>
-                <td class="px-4 py-2">{{ $item->created_at->format('d M Y H:i') }}</td>
-                <td class="px-4 py-2">{{ $item->keperluan }}</td>
-                <td class="px-4 py-2">{{ $item->tujuan_id }}</td>
-                <td class="px-4 py-2">{{ $item->identitas }}</td>
-                <td class="px-4 py-2">{{ $item->daerah }}</td>
-                <td class="px-4 py-2">{{ $item->nokartu }}</td>
-                <td class="px-4 py-2">{{ $item->nopol }}</td>
-                <td class="px-4 py-2">
-                    @if($item->status == 'pending')
-                        <span class="text-red-600 font-bold">Menunggu</span>
-                    @elseif($item->status == 'aktif')
-                        <span class="text-green-600 font-bold">Didalam</span>
-                    @elseif($item->status == 'nonaktif')
-                        <span class="text-gray-600 font-bold">Keluar</span>
-                    @endif
-                </td>
-                
-                <td class="px-4 py-2 flex flex-col sm:flex-row gap-2">
-                    @if($item->status === 'aktif')
-                        <a href="{{ route('submission.edit', $item->id) }}" 
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded w-full sm:w-auto">Edit</a>
-                    @else
-                        <span class="text-gray-400">Tidak Tersedia</span>
-                    @endif
-                    <form action="{{ route('submission.forceDelete', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini permanen?');">
-                        @csrf @method('DELETE')
-                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded w-full sm:w-auto">
-                            Hapus
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="13" class="text-center py-4">Belum ada data</td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
+<!-- Table Container -->
+<div id="tableContainer">
+    @include('partials.table', ['submissions' => $submissions])
 </div>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search');
     const statusSelect = document.getElementById('status');
+    const perPageSelect = document.getElementById('perPage');
     const tableContainer = document.getElementById('tableContainer');
 
-    statusSelect.addEventListener('change', function() {
-        const status = this.value;
+    function loadTable(pageUrl = null) {
+        const status = statusSelect.value;
+        const search = searchInput.value;
+        const perPage = perPageSelect.value;
 
-        fetch("{{ route('datatamu') }}?status=" + status)
+        let url = pageUrl ?? `{{ route('submission.datatamu') }}`;
+        url += `?status=${status}&search=${search}&perPage=${perPage}`;
+
+        fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } }) // penting
             .then(response => response.text())
             .then(html => {
-                // replace tabel dengan hasil partial
                 tableContainer.innerHTML = html;
+
+                // re-bind pagination links
+                tableContainer.querySelectorAll('.pagination a').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        loadTable(this.getAttribute('href'));
+                    });
+                });
             })
             .catch(err => console.error(err));
+    }
+
+
+    statusSelect.addEventListener('change', () => loadTable());
+    searchInput.addEventListener('keyup', () => loadTable());
+    perPageSelect.addEventListener('change', () => loadTable());
+
+    // initial pagination binding
+    document.querySelectorAll('.pagination a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            loadTable(this.getAttribute('href'));
+        });
     });
 });
 </script>
-
-
 @endsection

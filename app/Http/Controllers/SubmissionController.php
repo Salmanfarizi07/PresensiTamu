@@ -104,23 +104,38 @@ class SubmissionController extends Controller
         return redirect()->route('datatamu')->with('success', 'Data berhasil diupdate!');
     }
 
-
     public function datatamu(Request $request)
     {
-        $statusFilter = $request->get('status'); // ambil filter status
+        $query = Submission::query();
 
-        $query = Submission::latest(); // urut berdasarkan created_at DESC
-        dd($statusFilter, $submissions->pluck('status'));
-
-        if(in_array($statusFilter, ['aktif','pending'])) {
-            $query->where('status', $statusFilter);
+        if ($request->status) {
+            $query->where('status', $request->status);
         }
 
-        $submissions = $query->get();
+        if($request->search) {
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', "%{$request->search}%")
+                ->orWhere('alamat', 'like', "%{$request->search}%")
+                ->orWhere('keperluan', 'like', "%{$request->search}%")
+                ->orWhere('nopol', 'like', "%{$request->search}%");
+            });
+        }
 
-        return view('submission.datatamu', compact('submissions', 'statusFilter'));
+        if ($request->perPage === 'all') {
+            $submissions = $query->get(); // ambil semua data
+        } else {
+            $perPage = $request->perPage ?? 10;
+            $submissions = $query->paginate($perPage)->withQueryString();
+        }
+
+        if ($request->ajax()) {
+            // Hanya kembalikan tabel (partial)
+            return view('partials.table', compact('submissions'))->render();
+        }
+
+        // Kalo akses normal (non-AJAX), return full layout
+        return view('datatamu', compact('submissions'));
     }
-
 
 
 
@@ -141,38 +156,6 @@ class SubmissionController extends Controller
         ]);
 
     }
-
-    // public function accPending(Request $request, $id)
-    // {
-    //     $request->validate([
-    //         'id_kartu' => 'required|string|size:10',
-    //     ]);
-
-    //     $zone = Zone::where('id_kartu', $request->id_kartu)->first();
-
-    //     if (!$zone) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'ID Kartu tidak valid!'
-    //         ], 404);
-    //     }
-
-    //     $tamu = Submission::findOrFail($id);
-    //     $tamu->status   = 'aktif';
-    //     $tamu->daerah   = $zone->nomor . '-' . $zone->zona; // nomor-zona
-    //     $tamu->id_kartu = $zone->id_kartu;                  // simpan ID Kartu asli
-    //     $tamu->save();
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Tamu berhasil diaktifkan!',
-    //         'tamu' => [
-    //             'name'   => $tamu->name,
-    //             'daerah' => $tamu->daerah,
-    //             'status' => $tamu->status
-    //         ]
-    //     ]);
-    // }
 
     public function accPending(Request $request, $id)
     {
@@ -285,73 +268,6 @@ class SubmissionController extends Controller
             ]
         ]);
     }
-
-    // public function checkout(Request $request)
-    // {
-    //     $request->validate([
-    //         'id_kartu' => 'required|string|size:10',
-    //         'submission_id' => 'nullable|integer',
-    //     ]);
-
-    //     if ($request->submission_id) {
-    //         // Cari data berdasarkan submission_id
-    //         $tamu = Submission::find($request->submission_id);
-
-    //         if (!$tamu) {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'Data tamu tidak ditemukan.'
-    //             ], 404);
-    //         }
-
-    //         // Pastikan id_kartu sesuai
-    //         if ($tamu->id_kartu !== $request->id_kartu) {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'ID Kartu tidak sesuai dengan tamu yang dipilih!'
-    //             ], 400);
-    //         }
-    //     } else {
-    //         // Cara lama: cari langsung berdasarkan id_kartu
-    //         $tamu = Submission::where('id_kartu', $request->id_kartu)
-    //                         ->where('status', 'aktif')
-    //                         ->first();
-
-    //         if (!$tamu) {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'Tidak ada tamu aktif dengan kartu ini.'
-    //             ], 404);
-    //         }
-    //     }
-
-    //     // Pastikan masih aktif
-    //     if ($tamu->status !== 'aktif') {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Tamu ini sudah nonaktif.'
-    //         ], 400);
-    //     }
-
-    //     // Update status jadi nonaktif (checkout)
-    //     $tamu->status = 'nonaktif';
-    //     $tamu->keluar = now()->format('H:i');
-    //     $tamu->save();
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Tamu berhasil checkout!',
-    //         'tamu' => [
-    //             'name' => $tamu->name,
-    //             'identitas' => $tamu->identitas,
-    //             'daerah' => $tamu->daerah,
-    //         ]
-    //     ]);
-    // }
-
-
-
-
     public function confirmCheckout(Request $request)
     {
         $request->validate([

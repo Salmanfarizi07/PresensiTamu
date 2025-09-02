@@ -12,8 +12,9 @@
                 <th class="px-4 py-2">Waktu Masuk</th>
                 <th class="px-4 py-2">Keperluan</th>
                 <th class="px-4 py-2">Tujuan</th>
+                <th class="px-4 py-2">Identitas</th>
                 <th class="px-4 py-2">No Kendaraan</th>
-                <th class="px-4 py-2">Daerah</th>
+                <th class="px-4 py-2">No Kartu Zona</th>
                 <th class="px-4 py-2">Status</th>
             </tr>
         </thead>
@@ -26,6 +27,7 @@
                     <td class="px-4 py-2">{{ $item->created_at->format('d-m-Y H:i') }}</td>
                     <td class="px-4 py-2">{{ $item->keperluan }}</td>
                     <td class="px-4 py-2">{{ $item->tujuan_id }}</td>
+                    <td class="px-4 py-2">{{ $item->identitas }}</td>
                     <td class="px-4 py-2">{{ $item->nopol }}</td>
                     <td class="px-4 py-2">{{ $item->daerah }}</td>
                     <td class="px-4 py-2">

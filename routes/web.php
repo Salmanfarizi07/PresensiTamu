@@ -41,7 +41,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard & sidebar
     Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard');
     Route::get('/dashboard/data', [DashboardController::class, 'data'])->name('dashboard.data');
-    Route::get('/datatamu', [DashboardController::class,'dataTamu'])->name('datatamu');
+    // Route::get('/datatamu', [DashboardController::class,'dataTamu'])->name('datatamu');
+    Route::get('/datatamu', [SubmissionController::class, 'datatamu'])->name('submission.datatamu');
     //Route::get('/usermain', [SubmissionController::class, 'usermain'])->name('usermain');
     Route::get('/datauser', [DashboardController::class,'dataUser'])->name('datauser');
     // Route::get('/laporan', [SubmissionController::class, 'laporanNonaktif'])->name('laporan');
@@ -92,6 +93,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/tujuans/pdf', [TujuanController::class, 'picPdf'])->name('tujuans.picPdf');
     Route::post('/tujuans/import', [TujuanController::class, 'import'])->name('tujuans.import');
     Route::get('/tujuans/export', [TujuanController::class, 'export'])->name('tujuans.export');
+    Route::resource('tujuans', TujuanController::class)->except(['update']);
+    Route::patch('tujuans/{tujuan}', [TujuanController::class, 'update'])->name('tujuans.update');
+
 
     // Route::get('/tujuans/pdf/{unit}', [TujuanController::class, 'picPdf'])->name('tujuans.picPdf');
 

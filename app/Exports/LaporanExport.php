@@ -17,9 +17,9 @@ class LaporanExport implements FromCollection, WithHeadings, WithMapping
     public function headings(): array
     {
         return [
-            'ID',
+            'No',
             'Nama',
-            'Alamat',
+            'Alamat/Instansi',
             'Jumlah',
             'Waktu Masuk',
             'Waktu Keluar',
@@ -27,7 +27,7 @@ class LaporanExport implements FromCollection, WithHeadings, WithMapping
             'Bukti Identitas',
             'No Kartu Zona',
             'Jenis Kendaraan',
-            'No Polisi Kendaraan',
+            'No Kendaraan',
             'Tujuan Unit/PIC'
         ];
     }

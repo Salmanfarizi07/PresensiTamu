@@ -4,7 +4,7 @@
 @section('content')
 <h1 class="text-2xl font-bold mb-6">Data Kartu Zona</h1>
 
-<div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-2 md:gap-0">
+<div class="flex flex-col md:flex-row md:items-center mb-4 gap-2">
     <!-- Tombol Tambah Data -->
     <a href="/zones/add" 
        class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition text-center">
@@ -12,8 +12,8 @@
     </a>
 
     <!-- Filter -->
-    <form method="GET" action="{{ route('zones') }}" class="flex flex-col sm:flex-row sm:items-center gap-2 w-full md:w-auto">
-        <label for="zona" class="font-semibold text-gray-700">Filter Zona:</label>
+    <form method="GET" action="{{ route('zones') }}" 
+          class="flex flex-col sm:flex-row sm:items-center gap-2 w-full md:w-auto">
         <select name="zona" id="zona" onchange="this.form.submit()" 
             class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto">
             <option value="">Semua</option>
@@ -23,6 +23,7 @@
         </select>
     </form>
 </div>
+
 
 
 

@@ -5,7 +5,7 @@
 @section('content')
 
 <h1 class="text-2xl font-bold mb-0">Laporan Kunjungan</h1>
-<div class="mb-0 p-3 bg-gray-100 rounded-lg">
+<div class="mb-0 p-3 rounded-lg">
     <span class="font-semibold text-blue-600">Total Kunjungan: {{ $totalKunjungan }} Tamu</span> 
 </div>
 

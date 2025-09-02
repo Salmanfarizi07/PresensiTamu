@@ -3,16 +3,16 @@
         <tr>
             <th class="px-4 py-2">No</th>
             <th class="px-4 py-2">Nama</th>
-            <th class="px-4 py-2">Alamat</th>
+            <th class="px-4 py-2">Alamat/Instansi</th>
             <th class="px-4 py-2">Jumlah</th>
             <th class="px-4 py-2">Masuk</th>
             <th class="px-4 py-2">Keluar</th>
             <th class="px-4 py-2">Keperluan</th>
             <th class="px-4 py-2">Tujuan</th>
-            <th class="px-4 py-2">Identitas</th>
-            <th class="px-4 py-2">No Daerah</th>
+            <th class="px-4 py-2">Bukti Identitas</th>
+            <th class="px-4 py-2">No Kartu Zona</th>
             <th class="px-4 py-2">Jenis Kendaraan</th>
-            <th class="px-4 py-2">No Polisi</th>
+            <th class="px-4 py-2">No Kendaraan</th>
         </tr>
     </thead>
     <tbody>

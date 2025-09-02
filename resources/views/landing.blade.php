@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Landing Page</title>
+  <title>Kunjungan Tamu PLN</title>
+  <link rel="icon" type="image/png" href="{{ asset('ai.png') }}">
   <link rel="stylesheet" href="{{ asset('css/style.css') }}">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
@@ -16,7 +17,7 @@
 </head>
 
 <body>
-  <img src="/images/wp2.png" class="bg-img">
+  <!-- <img src="/images/wp2.png" class="bg-img"> -->
   
   <div class="top-photos">
       <img src="/images/danantara.png" alt="Foto 1">
@@ -65,7 +66,7 @@
                 <input type="text" name="keperluan" required class="border p-1 rounded w-full text-sm" required>
                 </div>
             </div>
-            <button type="button" id="toStep2" class="btn-next">Selanjutnya →</button>
+            <button type="button" id="toStep2" class="btn-next">Selanjutnya</button>
             </div>
         </div>
 
@@ -166,6 +167,10 @@ document.getElementById('submissionForm').addEventListener('submit', function(e)
             });
             form.reset();
             closeModal();
+
+            // reset ke step1
+            document.getElementById('step1').style.display = 'block';
+            document.getElementById('step2').style.display = 'none';
         } else {
             Swal.fire({
                 icon: 'error',
@@ -174,6 +179,7 @@ document.getElementById('submissionForm').addEventListener('submit', function(e)
             });
         }
     })
+
     .catch(err => console.error(err));
 });
 </script>

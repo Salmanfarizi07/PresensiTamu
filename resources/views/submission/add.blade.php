@@ -101,7 +101,7 @@
                     showConfirmButton: false,
                     timer: 2000
                 }).then(() => {
-                    window.location.href = "{{ route('datatamu') }}";
+                    window.location.href = "{{ route('submission.datatamu') }}";
                 });
             },
             error: function(xhr) {

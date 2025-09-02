@@ -19,7 +19,7 @@
     </div>
 
     <!-- Total Tamu Didalam -->
-    <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 transition duration-300 hover:border-yellow-500 hover:shadow-md cursor-pointer">
+    <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 transition duration-300 hover:border-green-500 hover:shadow-md cursor-pointer">
         <h2 class="text-sm font-medium text-gray-500">Total Tamu Didalam</h2>
         <div class="flex items-center mt-3 space-x-2">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-green-500">
@@ -47,7 +47,7 @@
     <!-- Filter Form -->
     <form id="filterForm" class="flex flex-wrap items-center gap-2 mb-4">
         <!-- Status -->
-        <select id="statusFilter" name="status" class="p-2 rounded-lg border border-gray-300">
+        <select id="statusFilter" name="status" class="px-4 py-2 rounded-lg border border-gray-300">
             <option value="">-- Semua Status --</option>
             <option value="aktif" {{ request('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
             <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>

@@ -36,27 +36,49 @@
 </div>
 <div class="flex flex-col md:flex-row md:items-center mt-5 md:justify-between mb-4 gap-2">
 
-    <!-- Kiri: Tombol Tambah Data + Filter Unit -->
+    <!-- KIRI: Tambah Data + Filter -->
     <div class="flex flex-col md:flex-row md:items-center gap-2">
         <!-- Tombol Tambah Data -->
         <a href="{{ route('tujuans.create') }}" 
            class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition text-center">
             Tambah Data
         </a>
+
+        <!-- Filter Unit -->
+        <form method="GET" action="{{ route('tujuans.index') }}" 
+              class="flex flex-col sm:flex-row sm:items-center gap-2 w-full md:w-auto">
+            <label for="unit" class="font-semibold text-gray-700"></label>
+            <select name="unit" id="unit" onchange="this.form.submit()" 
+                class="border border-gray-300 rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto">
+                <option value="">Semua</option>
+                <option value="UPT" {{ $unitFilter == 'UPT' ? 'selected' : '' }}>UPT</option>
+                <option value="UP2B" {{ $unitFilter == 'UP2B' ? 'selected' : '' }}>UP2B</option>
+            </select>
+        </form>
+    </div>
+
+    <!-- KANAN: Template + Import + Export -->
+    <div class="flex flex-col md:flex-row md:items-center gap-2">
+        <!-- Template -->
+        <a href="{{ asset('files/template_importpegawai.xlsx') }}" 
+           class="bg-yellow-500 text-white px-4 py-2 rounded-lg shadow hover:bg-yellow-700 transition text-center">
+            Template
+        </a>
+
         <!-- Import -->
         <form id="importForm" action="{{ route('tujuans.import') }}" method="POST" enctype="multipart/form-data" class="w-full sm:w-auto">
             @csrf
             <input type="file" name="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display:none" required>
             
             <button type="button" id="importBtn" 
-                    class="w-full sm:w-auto bg-green-500 text-white px-4 py-2 rounded-lg">
+                    class="w-full sm:w-auto bg-green-500 text-white px-4 py-2 shadow hover:bg-green-700 transition rounded-lg">
                 Import File
             </button>
         </form>
 
         <!-- Export -->
         <div class="relative inline-block text-left group w-full sm:w-auto">
-            <button class="w-full sm:w-auto bg-green-500 text-white px-4 py-2 rounded inline-flex items-center justify-center sm:justify-start">
+            <button class="w-full sm:w-auto bg-green-500 text-white px-4 py-2 rounded-lg inline-flex items-center shadow hover:bg-green-700 transition justify-center sm:justify-start">
                 Unduh Data
                 <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -73,20 +95,10 @@
                 class="block px-4 py-2 hover:bg-gray-100">Export Semua</a>
             </div>
         </div>
-
-        <!-- Filter Unit -->
-        <form method="GET" action="{{ route('tujuans.index') }}" 
-              class="flex flex-col sm:flex-row sm:items-center gap-2 w-full md:w-auto">
-            <label for="unit" class="font-semibold text-gray-700"></label>
-            <select name="unit" id="unit" onchange="this.form.submit()" 
-                class="border border-gray-300 rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto">
-                <option value="">Semua</option>
-                <option value="UPT" {{ $unitFilter == 'UPT' ? 'selected' : '' }}>UPT</option>
-                <option value="UP2B" {{ $unitFilter == 'UP2B' ? 'selected' : '' }}>UP2B</option>
-            </select>
-        </form>
     </div>
+
 </div>
+
 
 
 <div class="overflow-x-auto text-sm mt-2">
