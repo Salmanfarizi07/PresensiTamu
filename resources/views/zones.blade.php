@@ -15,7 +15,7 @@
     <form method="GET" action="{{ route('zones') }}" 
           class="flex flex-col sm:flex-row sm:items-center gap-2 w-full md:w-auto">
         <select name="zona" id="zona" onchange="this.form.submit()" 
-            class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto">
+            class="border border-gray-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto">
             <option value="">Semua</option>
             <option value="Terbatas" {{ $zonaFilter == 'Terbatas' ? 'selected' : '' }}>Terbatas</option>
             <option value="Tertutup" {{ $zonaFilter == 'Tertutup' ? 'selected' : '' }}>Tertutup</option>

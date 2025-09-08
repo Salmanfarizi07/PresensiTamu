@@ -7,6 +7,7 @@
                 <th class="px-4 py-2">Alamat/Instansi</th>
                 <th class="px-4 py-2">Jumlah</th>
                 <th class="px-4 py-2">Masuk</th>
+                <th class="px-4 py-2">Keluar</th>
                 <th class="px-4 py-2">Keperluan</th>
                 <th class="px-4 py-2">Tujuan</th>
                 <th class="px-4 py-2">Identitas</th>
@@ -25,6 +26,7 @@
                 <td class="px-4 py-2">{{ $item->alamat }}</td>
                 <td class="px-4 py-2">{{ $item->jumlah }}</td>
                 <td class="px-4 py-2">{{ $item->created_at->format('d M Y H:i') }}</td>
+                <td class="px-4 py-2">{{ $item->keluar }}</td>
                 <td class="px-4 py-2">{{ $item->keperluan }}</td>
                 <td class="px-4 py-2">{{ $item->tujuan_id }}</td>
                 <td class="px-4 py-2">{{ $item->identitas }}</td>

@@ -168,7 +168,7 @@ class SubmissionController extends Controller
         if (!$zone) {
             return response()->json([
                 'success' => false,
-                'message' => 'ID Kartu tidak valid!'
+                'message' => 'Kartu Zona tidak valid!'
             ], 404);
         }
 
@@ -192,7 +192,7 @@ class SubmissionController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Tamu berhasil diaktifkan!',
+            'message' => 'Tamu berhasil dikonfirmasi!',
             'tamu' => [
                 'name'   => $tamu->name,
                 'daerah' => $tamu->daerah,
@@ -236,7 +236,7 @@ class SubmissionController extends Controller
         if (!$zone) {
             return response()->json([
                 'success' => false,
-                'message' => 'ID Kartu tidak valid!'
+                'message' => 'Kartu Zona tidak valid!'
             ], 404);
         }
 
@@ -249,7 +249,7 @@ class SubmissionController extends Controller
         if (!$tamu) {
             return response()->json([
                 'success' => false,
-                'message' => 'Tamu tidak ditemukan atau sudah checkout.'
+                'message' => 'Tamu tidak ditemukan atau sudah keluar.'
             ], 404);
         }
 
@@ -260,7 +260,7 @@ class SubmissionController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Tamu berhasil checkout!',
+            'message' => 'Tamu telah dikeluarkan!',
             'tamu' => [
                 'name' => $tamu->name,
                 'identitas' => $tamu->identitas,
@@ -281,7 +281,7 @@ class SubmissionController extends Controller
         if(!$tamu){
             return response()->json([
                 'success' => false,
-                'message' => 'ID Kartu tidak valid atau tamu belum aktif.'
+                'message' => 'Kartu Zona tidak valid atau tamu belum masuk.'
             ]);
         }
 
@@ -306,7 +306,7 @@ class SubmissionController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Tamu berhasil checkout!',
+            'message' => 'Tamu telah dikeluarkan!',
             'name' => $tamu->name,
             'identitas' => $tamu->identitas
         ]);

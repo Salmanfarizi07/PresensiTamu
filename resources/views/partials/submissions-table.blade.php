@@ -65,9 +65,9 @@ async function openAccSwal(tamuId) {
     console.log("ACC clicked:", tamuId);
 
     const { value: idKartu } = await Swal.fire({
-        title: "Masukkan ID Kartu",
+        title: '<span style="color:green">KONFIRMASI KUNJUNGAN</span>',
         input: "text",
-        inputPlaceholder: "ID Kartu 10 digit",
+        inputPlaceholder: "Silahkan Tap Kartu Zona ",
         showCancelButton: true,
         confirmButtonText: "Lanjut",
         cancelButtonText: "Batal"
@@ -75,7 +75,7 @@ async function openAccSwal(tamuId) {
 
     if (!idKartu) return console.log("ACC dibatalkan");
 
-    console.log("ID Kartu input:", idKartu);
+    console.log("Tap Kartu Zona:", idKartu);
 
     try {
         const res = await fetch(`/tamu/acc/${tamuId}`, {
@@ -104,16 +104,16 @@ async function openAccSwal(tamuId) {
 // ===== CHECKOUT =====
 async function openCheckoutSwal() {
     const { value: idKartu } = await Swal.fire({
-        title: "Masukkan ID Kartu",
+        title: '<span style="color:red">SELESAIKAN KUNJUNGAN</span>',
         input: "text",
-        inputPlaceholder: "ID Kartu 10 digit",
+        inputPlaceholder: "Silahkan Tap Kartu Zona",
         showCancelButton: true,
         confirmButtonText: "Lanjut",
         cancelButtonText: "Batal"
     });
 
     if (!idKartu) return console.log("Checkout dibatalkan");
-    console.log("ID Kartu input untuk checkout:", idKartu);
+    console.log("Tap Kartu Zona untuk checkout:", idKartu);
 
     try {
         const res = await fetch(`/tamu/checkout`, {

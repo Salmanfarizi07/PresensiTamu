@@ -86,13 +86,13 @@
             </button>
 
             <!-- Dropdown menu -->
-            <div class="absolute hidden group-hover:block bg-white border rounded shadow-lg mt-1 w-full sm:w-40 z-50">
+            <div class="absolute hidden group-hover:block bg-white border rounded-lg shadow-lg mt-0 w-full sm:w-40 z-50">
                 <a href="{{ route('tujuans.export', ['unit' => 'UPT']) }}" 
-                class="block px-4 py-2 hover:bg-gray-100">Export UPT</a>
+                class="block px-2 py-2 hover:bg-gray-100">Export UPT</a>
                 <a href="{{ route('tujuans.export', ['unit' => 'UP2B']) }}" 
-                class="block px-4 py-2 hover:bg-gray-100">Export UP2B</a>
+                class="block px-2 py-2 hover:bg-gray-100">Export UP2B</a>
                 <a href="{{ route('tujuans.export') }}" 
-                class="block px-4 py-2 hover:bg-gray-100">Export Semua</a>
+                class="block px-2 py-2 hover:bg-gray-100">Export Semua</a>
             </div>
         </div>
     </div>
