@@ -48,9 +48,9 @@
                 </div>
 
                 <div>
-                    <label class="block font-semibold mb-1">No Kartu Daerah Bebas/Terbatas (Pending)</label>
+                    <label class="block font-semibold mb-1">No Kartu Zona Daerah</label>
                     <input type="text" name="daerah" value="{{ old('daerah', $submission->daerah) }}"
-                           class="border rounded w-full p-2 focus:ring focus:ring-blue-300">
+                           class="border rounded w-full p-2 focus:ring focus:ring-blue-300" disabled>
                 </div>
 
                 <div>
@@ -102,7 +102,7 @@
                     showConfirmButton: false,
                     timer: 2000
                 }).then(() => {
-                    window.location.href = "{{ route('submission.datatamu') }}";
+                    window.location.href = "{{ route('submission.datatamu') }}"; 
                 });
             },
             error: function(xhr) {

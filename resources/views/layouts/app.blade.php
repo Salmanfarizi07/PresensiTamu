@@ -3,6 +3,7 @@
 <head>
     <link rel="icon" type="image/png" href="{{ asset('ai.png') }}">
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Dashboard')</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -80,13 +81,13 @@
         <i data-lucide="file-text" class="w-5 h-5"></i>
         <span class="text">Laporan</span>
     </a>
-    <a href="{{ route('users.index') }}">
-        <i data-lucide="users" class="w-5 h-5"></i>
-        <span class="text">Data User</span>
-    </a>
     <a href="{{ route('tujuans.index') }}">
         <i data-lucide="airplay" class="w-5 h-5"></i>
         <span class="text">Data Pegawai</span>
+    </a>
+    <a href="{{ route('users.index') }}">
+        <i data-lucide="users" class="w-5 h-5"></i>
+        <span class="text">Data User</span>
     </a>
     <a href="{{ route('setting') }}">
         <i data-lucide="settings" class="w-5 h-5"></i>

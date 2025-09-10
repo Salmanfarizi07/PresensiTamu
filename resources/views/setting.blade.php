@@ -2,7 +2,7 @@
 @section('title','Pengaturan')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-4">Pengaturan Halaman User</h1>
+<h1 class="text-2xl font-bold mb-4">Pengaturan Halaman Formulir</h1>
 
 @if(session('success'))
     <div class="bg-green-100 text-green-700 p-2 rounded mb-4">

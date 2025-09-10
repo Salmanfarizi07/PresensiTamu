@@ -69,7 +69,7 @@ class SubmissionController extends Controller
 
         // Cek status
         if ($submission->status !== 'aktif') {
-            return redirect()->route('datatamu')
+            return redirect()->route('submission.datatamu')
                             ->with('error', 'Data ini tidak dapat diedit karena statusnya bukan aktif.');
         }
 
@@ -83,7 +83,7 @@ class SubmissionController extends Controller
 
         // Cek status sebelum update
         if ($submission->status !== 'aktif') {
-            return redirect()->route('datatamu')
+            return redirect()->route('submission.datatamu')
                             ->with('error', 'Data ini tidak dapat diupdate karena statusnya bukan aktif.');
         }
 
@@ -101,12 +101,13 @@ class SubmissionController extends Controller
 
         $submission->update($request->all());
 
-        return redirect()->route('datatamu')->with('success', 'Data berhasil diupdate!');
+        return redirect()->route('submission.datatamu')->with('success', 'Data berhasil diupdate!');
     }
 
     public function datatamu(Request $request)
     {
-        $query = Submission::query();
+        //$query = Submission::query();
+        $query = Submission::latest();
 
         if ($request->status) {
             $query->where('status', $request->status);
@@ -202,13 +203,24 @@ class SubmissionController extends Controller
     }
 
 
-
     public function resetNonaktif()
     {
-        Submission::where('status', 'nonaktif')->delete();
-
+        $this->doResetNonaktif();
         return redirect()->back()->with('success', 'Semua data tamu nonaktif berhasil direset.');
     }
+
+    // untuk dipakai scheduler (tanpa redirect)
+    public function doResetNonaktif()
+    {
+        Submission::where('status', 'nonaktif')->delete();
+    }
+
+    // public function resetNonaktif()
+    // {
+    //     Submission::where('status', 'nonaktif')->delete();
+
+    //     return redirect()->back()->with('success', 'Semua data tamu nonaktif berhasil direset.');
+    // }
 
     public function forceDelete($id)
     {

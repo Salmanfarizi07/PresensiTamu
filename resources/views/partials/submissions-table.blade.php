@@ -33,7 +33,7 @@
                     <td class="px-4 py-2">
                         @if($item->status == 'aktif')
                             <button onclick="openCheckoutSwal({{ $item->id }})" 
-                                    class="px-2 py-1 bg-green-500 text-white text-sm rounded-lg">
+                                    class="px-2 py-1 bg-red-500 text-white text-sm rounded-lg">
                                 Didalam
                             </button>
                         @elseif($item->status == 'pending')
@@ -42,7 +42,7 @@
                                 Menunggu
                             </button>
                         @else
-                            <span class="px-2 py-1 bg-red-500 text-white text-sm rounded-lg">Keluar</span>
+                            <span class="px-2 py-1 bg-green-500 text-white text-sm rounded-lg">Keluar</span>
                         @endif
                     </td>
                 </tr>

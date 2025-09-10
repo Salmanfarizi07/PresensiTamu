@@ -12,8 +12,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('submissions:archive-nonaktif')->dailyAt('00:00');
+        $schedule->call(function () {
+            \Log::info('Tes scheduler jalan: ' . now());
+            app(\App\Http\Controllers\SubmissionController::class)->doResetNonaktif();
+        })->dailyAt('00:00'); //Server Harus Standby Online
     }
+
 
 
     /**

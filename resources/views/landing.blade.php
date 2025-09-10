@@ -140,10 +140,9 @@ document.getElementById('submissionForm').addEventListener('submit', function(e)
     let form = e.target;
     let formData = new FormData(form);
 
-    // Ambil unit & nama
-    const unit = formData.get('unit'); // value dari unit
+    const unit = formData.get('unit'); 
     const tujuanSelect = document.getElementById('tujuan_id');
-    const tujuanNama = tujuanSelect.options[tujuanSelect.selectedIndex].text; // text dari dropdown
+    const tujuanNama = tujuanSelect.options[tujuanSelect.selectedIndex].text; 
 
     formData.set('tujuan_id', unit + ' - ' + tujuanNama);
     formData.set('name', formData.get('name').trim());
@@ -184,36 +183,53 @@ document.getElementById('submissionForm').addEventListener('submit', function(e)
 });
 </script>
 
-
-<!-- // angka max 2 -->
 <script>
   const input = document.getElementById('angka');
 
   input.addEventListener('input', function() {
-    // hapus karakter non-digit
+    // hapus semua karakter non-angka
     this.value = this.value.replace(/\D/g, '');
+
+    // hapus leading zero (nol di depan)
+    if (this.value.startsWith('0')) {
+      this.value = this.value.replace(/^0+/, '');
+    }
+
     // batasi maksimal 2 digit
     if (this.value.length > 2) {
       this.value = this.value.slice(0, 2);
     }
   });
 </script>
+<!-- 
+<script>
+  const input = document.getElementById('angka');
+
+  input.addEventListener('input', function() {
+    
+    this.value = this.value.replace(/\D/g, '');
+    
+    if (this.value.length > 2) {
+      this.value = this.value.slice(0, 2);
+    }
+  });
+</script> -->
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // aktifkan TomSelect pada dropdown nama
+    
     new TomSelect("#tujuan_id",{
         placeholder: "-- Pilih Nama --",
         allowEmptyOption: true,
-        maxOptions: 500, // batasi jumlah hasil
+        maxOptions: 500, 
     });
 
-    // event saat unit dipilih
+    
     document.getElementById('unit').addEventListener('change', function() {
         let unit = this.value;
         let tujuanSelect = document.getElementById('tujuan_id').tomselect;
 
-        // reset dulu
+        
         tujuanSelect.clearOptions();
         tujuanSelect.addOption({value: "", text: "-- Pilih Nama --"});
 
@@ -244,7 +260,7 @@ document.getElementById('toStep2').addEventListener('click', function() {
         if(!input.value.trim()){
             valid = false;
             emptyFields.push(input.previousElementSibling.innerText.replace('*',''));
-            input.classList.add('border-red-500'); // optional tanda merah
+            input.classList.add('border-red-500'); 
         } else {
             input.classList.remove('border-red-500');
         }

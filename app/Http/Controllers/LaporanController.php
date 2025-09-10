@@ -34,6 +34,7 @@ class LaporanController extends Controller
     public function data(Request $request)
     {
         $query = Laporan::query();
+        
 
         if($request->search) {
             $query->where(function($q) use ($request) {
@@ -51,7 +52,7 @@ class LaporanController extends Controller
         if($request->per_page && $request->per_page != 'all') {
             $laporans = $query->latest()->paginate($request->per_page);
         } else {
-            $laporans = $query->latest()->get();
+            $laporans = $query->latest()->paginate(999999);
         }
 
         return view('laporans.partials.table', compact('laporans'));

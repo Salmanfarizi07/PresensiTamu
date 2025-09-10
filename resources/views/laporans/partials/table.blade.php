@@ -18,7 +18,9 @@
     <tbody>
         @forelse($laporans as $i => $item)
         <tr class="text-gray-800 border-b">
-            <td class="px-4 py-2">{{ $i + 1 }}</td>
+            <td class="px-4 py-2">
+                {{ $laporans->firstItem() + $loop->index }}
+            </td>
             <td class="px-4 py-2">{{ $item->name }}</td>
             <td class="px-4 py-2">{{ $item->alamat }}</td>
             <td class="px-4 py-2">{{ $item->jumlah }}</td>

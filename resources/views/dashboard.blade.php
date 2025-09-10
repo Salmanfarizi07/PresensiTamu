@@ -19,25 +19,25 @@
     </div>
 
     <!-- Total Tamu Didalam -->
-    <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 transition duration-300 hover:border-green-500 hover:shadow-md cursor-pointer">
+    <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 transition duration-300 hover:border-red-500 hover:shadow-md cursor-pointer">
         <h2 class="text-sm font-medium text-gray-500">Total Tamu Didalam</h2>
         <div class="flex items-center mt-3 space-x-2">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-green-500">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-red-500">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <p class="text-lg font-bold text-green-600">{{ $totalTamuAktif }}</p>
+            <p class="text-lg font-bold text-red-600">{{ $totalTamuAktif }}</p>
         </div>
     </div>
 
     <!-- Total Tamu Keluar -->
-    <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 transition duration-300 hover:border-red-500 hover:shadow-md cursor-pointer">
+    <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 transition duration-300 hover:border-green-500 hover:shadow-md cursor-pointer">
         <h2 class="text-sm font-medium text-gray-500">Total Tamu Sudah Keluar</h2>
         <div class="flex items-center mt-3 space-x-2">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-red-600">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-green-600">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25a2.25 2.25 0 00-2.25-2.25h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M18 12h.008v.008H18V12z" />
             </svg>
-            <p class="text-2xl font-bold text-red-700">{{ $totalTamuNonAktif }}</p>
+            <p class="text-2xl font-bold text-green-700">{{ $totalTamuNonAktif }}</p>
         </div>
     </div>
 </div>

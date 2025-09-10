@@ -35,11 +35,11 @@
                 <td class="px-4 py-2">{{ $item->nopol }}</td>
                 <td class="px-4 py-2">
                     @if($item->status == 'pending')
-                        <span class="text-red-600 font-bold">Menunggu</span>
+                        <span class="text-yellow-600 font-bold">Menunggu</span>
                     @elseif($item->status == 'aktif')
-                        <span class="text-green-600 font-bold">Didalam</span>
+                        <span class="text-red-600 font-bold">Didalam</span>
                     @else
-                        <span class="text-gray-600 font-bold">Keluar</span>
+                        <span class="text-green-600 font-bold">Keluar</span>
                     @endif
                 </td>
                 <td class="px-4 py-2 flex flex-col sm:flex-row gap-2">
@@ -49,12 +49,14 @@
                     @else
                         <span class="text-gray-400">Tidak Tersedia</span>
                     @endif
-                    <form action="{{ route('submission.forceDelete', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini permanen?');">
-                        @csrf @method('DELETE')
+                    <form action="{{ route('submission.forceDelete', $item->id) }}" method="POST" class="delete-form">
+                        @csrf
+                        @method('DELETE')
                         <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded w-full sm:w-auto">
                             Hapus
                         </button>
                     </form>
+
                 </td>
             </tr>
             @empty
@@ -72,3 +74,31 @@
     </div>
     @endif
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const forms = document.querySelectorAll(".delete-form");
+
+    forms.forEach(form => {
+        form.addEventListener("submit", function (e) {
+            e.preventDefault(); // cegah submit langsung
+
+            Swal.fire({
+                title: "Yakin ingin menghapus?",
+                text: "Data ini akan dihapus permanen dan tidak bisa dikembalikan!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Ya, hapus!",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // jalankan submit kalau user konfirmasi
+                }
+            });
+        });
+    });
+});
+</script>
+

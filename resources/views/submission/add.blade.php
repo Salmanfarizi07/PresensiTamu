@@ -4,7 +4,7 @@
 <h1 class="text-2xl font-bold mb-6 text-gray-800">Tambah Data Tamu</h1>
 
 <div class="bg-white shadow-md rounded-xl p-6">
-    <form id="createForm" action="{{ route('submission.store') }}" method="POST">
+    <form id="createForm" action="{{ route('submission.store') }}" method="POST" autocomplete="off">
         @csrf
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -12,59 +12,74 @@
             <div class="space-y-4">
                 <div>
                     <label class="block font-semibold mb-1">Nama</label>
-                    <input type="text" name="name" value="{{ old('name') }}"
-                           class="border rounded w-full p-2 focus:ring focus:ring-blue-300" required>
+                    <input type="text" name="name" required
+                           class="border rounded w-full p-2 focus:ring focus:ring-blue-300">
                 </div>
 
                 <div>
                     <label class="block font-semibold mb-1">Alamat/Instansi</label>
-                    <input type="text" name="alamat" value="{{ old('alamat') }}"
-                           class="border rounded w-full p-2 focus:ring focus:ring-blue-300" required>
+                    <input type="text" name="alamat" required
+                           class="border rounded w-full p-2 focus:ring focus:ring-blue-300">
                 </div>
 
                 <div>
                     <label class="block font-semibold mb-1">Jumlah</label>
-                    <input type="number" name="jumlah" value="{{ old('jumlah') }}"
-                           class="border rounded w-full p-2 focus:ring focus:ring-blue-300" required>
+                    <input type="number" name="jumlah" required
+                           class="border rounded w-full p-2 focus:ring focus:ring-blue-300">
                 </div>
-
-                
 
                 <div>
                     <label class="block font-semibold mb-1">Keperluan</label>
-                    <input type="text" name="keperluan" value="{{ old('keperluan') }}"
-                           class="border rounded w-full p-2 focus:ring focus:ring-blue-300" required>
+                    <input type="text" name="keperluan" required
+                           class="border rounded w-full p-2 focus:ring focus:ring-blue-300">
                 </div>
+            
+            
+                <div>
+                    <label class="block font-semibold mb-1">Tujuan Unit*</label>
+                    <select id="unit" name="unit" class="border rounded w-full p-2 focus:ring focus:ring-blue-300" required>
+                        <option value="">-- Pilih Unit --</option>
+                        <option value="UPT">UPT</option>
+                        <option value="UP2B">UP2B</option>
+                    </select>
+                </div>
+
+                
             </div>
+
 
             <!-- Kolom kanan -->
             <div class="space-y-4">
                 <div>
-                    <label class="block font-semibold mb-1">Bukti Identitas*</label>
-                    <select name="identitas" class="border rounded w-full p-2 focus:ring focus:ring-blue-300" required>
-                        <option value="">-- Pilih --</option>
-                        <option value="KTP" {{ old('identitas') == 'KTP' ? 'selected' : '' }}>KTP</option>
-                        <option value="SIM" {{ old('identitas') == 'SIM' ? 'selected' : '' }}>SIM</option>
-                        <option value="Lainnya" {{ old('identitas') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                    <label class="block font-semibold mb-1">Tujuan PIC/Orang*</label>
+                    <select id="tujuan_id" name="tujuan_id" class="border rounded w-full p-2 focus:ring focus:ring-blue-300" required>
+                        <option value="">-- Pilih Nama --</option>
                     </select>
                 </div>
-
-                
+                <div>
+                    <label class="block font-semibold mb-1">Bukti Identitas*</label>
+                    <select name="identitas" class="border rounded w-full p-2 focus:ring focus:ring-blue-300" required>
+                        <option value="">-- Pilih Bukti Identitas --</option>
+                        <option value="KTP">KTP</option>
+                        <option value="SIM">SIM</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
 
                 <div>
                     <label class="block font-semibold mb-1">Jenis Kendaraan*</label>
                     <select name="nokartu" class="border rounded w-full p-2 focus:ring focus:ring-blue-300" required>
-                        <option value="">-- Pilih --</option>
-                        <option value="R2" {{ old('nokartu') == 'R2' ? 'selected' : '' }}>R2</option>
-                        <option value="R4" {{ old('nokartu') == 'R4' ? 'selected' : '' }}>R4</option>
-                        <option value="Lainnya" {{ old('nokartu') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                        <option value="">-- Pilih Jenis Kendaraan --</option>
+                        <option value="Roda 2">Roda 2</option>
+                        <option value="Roda 4">Roda 4</option>
+                        <option value="Lainnya">Lainnya</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block font-semibold mb-1">No Polisi</label>
-                    <input type="text" name="nopol" value="{{ old('nopol') }}"
-                           class="border rounded w-full p-2 focus:ring focus:ring-blue-300" style="text-transform: uppercase;">
+                    <label class="block font-semibold mb-1">No Polisi Kendaraan</label>
+                    <input type="text" name="nopol" style="text-transform: uppercase;"
+                           class="border rounded w-full p-2 focus:ring focus:ring-blue-300">
                 </div>
             </div>
         </div>
@@ -78,40 +93,76 @@
 </div>
 
 <!-- SweetAlert -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
 
 <script>
-    $('#createForm').on('submit', function(e) {
-        e.preventDefault();
-
-        let form = $(this);
-        let url = form.attr('action');
-        let data = form.serialize();
-
-        $.ajax({
-            url: url,
-            method: 'POST',
-            data: data,
-            success: function(res) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: 'Data berhasil ditambahkan',
-                    showConfirmButton: false,
-                    timer: 2000
-                }).then(() => {
-                    window.location.href = "{{ route('submission.datatamu') }}";
-                });
-            },
-            error: function(xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal!',
-                    text: 'Terjadi kesalahan, silakan coba lagi'
-                });
-            }
-        });
+document.addEventListener("DOMContentLoaded", function() {
+    // aktifkan TomSelect pada dropdown nama
+    new TomSelect("#tujuan_id",{
+        placeholder: "-- Pilih Nama --",
+        allowEmptyOption: true,
+        maxOptions: 500,
     });
+
+    // event saat unit dipilih
+    document.getElementById('unit').addEventListener('change', function() {
+        let unit = this.value;
+        let tujuanSelect = document.getElementById('tujuan_id').tomselect;
+
+        tujuanSelect.clearOptions();
+        tujuanSelect.addOption({value: "", text: "-- Pilih Nama --"});
+
+        if(unit){
+            fetch('/get-tujuan/' + unit)
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(item => {
+                        tujuanSelect.addOption({
+                            value: item.id,
+                            text: item.nama
+                        });
+                    });
+                });
+        }
+    });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.getElementById('createForm').addEventListener('submit', function(e){
+    e.preventDefault();
+
+    let form = e.target;
+    let formData = new FormData(form);
+
+    fetch(form.action, {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success){
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: data.message,
+                timer: 2000,
+                showConfirmButton: false
+            }).then(() => {
+                window.location.href = "{{ route('submission.datatamu') }}";
+            });
+        } else {
+            Swal.fire("Gagal!", data.message || "Terjadi kesalahan.", "error");
+        }
+    })
+    .catch(err => {
+        Swal.fire("Error!", "Tidak dapat terhubung ke server.", "error");
+    });
+});
 </script>
 @endsection
