@@ -25,3 +25,8 @@ RUN php artisan config:cache \
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 80
+
+# biar Apache/nginx/php-fpm pakai port Railway
+ENV PORT=8080
+EXPOSE 8080
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=${PORT}"]
