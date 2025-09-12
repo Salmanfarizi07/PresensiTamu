@@ -27,5 +27,7 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 EXPOSE 80
 
 # biar Apache/nginx/php-fpm pakai port Railway
-ENV PORT=8080
-EXPOSE 8080
+ENV PORT=${PORT:-8080}
+RUN sed -i "s/80/${PORT}/g" /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf
+EXPOSE ${PORT}
+CMD ["apache2-foreground"]
