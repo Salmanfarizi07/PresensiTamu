@@ -49,8 +49,8 @@
         <!-- Status -->
         <select id="statusFilter" name="status" class="px-4 py-2 rounded-lg border border-gray-300">
             <option value="">-- Semua Status --</option>
-            <option value="aktif" {{ request('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
-            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu</option>
+            <option value="aktif" {{ request('status') == 'aktif' ? 'selected' : '' }}>Didalam</option>
         </select>
 
         <!-- Search -->

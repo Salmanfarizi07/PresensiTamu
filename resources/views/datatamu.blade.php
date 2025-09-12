@@ -23,8 +23,8 @@
         <select name="status" id="status" 
                 class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 w-full sm:w-auto">
             <option value="">Semua</option>
-            <option value="pending">Pending</option>
-            <option value="aktif">Aktif</option>
+            <option value="pending">Menunggu</option>
+            <option value="aktif">Didalam</option>
         </select>
 
         <!-- Per Page -->
