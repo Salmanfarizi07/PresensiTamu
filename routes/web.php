@@ -27,12 +27,12 @@ Route::get('/get-tujuan/{unit}', function($unit) {
 // Landing submit form
 Route::post('/submit', [SubmissionController::class,'store'])->name('submit');
 Route::post('/submission', [SubmissionController::class, 'store'])->name('submission.store');
-Route::post('/submission/store', [SubmissionController::class, 'store'])->name('submission.store');
+//Route::post('/submission/store', [SubmissionController::class, 'store'])->name('submission.store');
 
 // Authenticated routes
 Route::middleware(['auth', 'verified'])->group(function () {
     //akun user
-    Route::resource('users', UserController::class);
+    //Route::resource('users', UserController::class);
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
@@ -79,8 +79,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/zones/delete/{nomor}', [ZoneController::class, 'destroy'])->name('zones.delete');
     Route::get('/zones/get-by-kartu/{id_kartu}', [ZoneController::class, 'getByKartu'])->name('zones.getByKartu');
 
-    //Laporan
-    Route::get('/laporans', [LaporanController::class, 'index'])->name('laporans');
 
     // tujuan
     //Route::get('/tujuans', [App\Http\Controllers\TujuanController::class, 'index'])->name('tujuans.index');
@@ -88,18 +86,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/tujuans/create', [TujuanController::class, 'create'])->name('tujuans.create');
     Route::post('/tujuans', [TujuanController::class, 'store'])->name('tujuans.store');
     Route::get('/tujuans/{tujuan}/edit', [TujuanController::class, 'edit'])->name('tujuans.edit');
-    Route::put('/tujuans/{tujuan}', [TujuanController::class, 'update'])->name('tujuans.update');
+    //Route::put('/tujuans/{tujuan}', [TujuanController::class, 'update'])->name('tujuans.update');
     Route::delete('/tujuans/{tujuan}', [TujuanController::class, 'destroy'])->name('tujuans.destroy');
     Route::get('/tujuans/pdf', [TujuanController::class, 'picPdf'])->name('tujuans.picPdf');
     Route::post('/tujuans/import', [TujuanController::class, 'import'])->name('tujuans.import');
     Route::get('/tujuans/export', [TujuanController::class, 'export'])->name('tujuans.export');
+
     Route::resource('tujuans', TujuanController::class)->except(['update']);
     Route::patch('tujuans/{tujuan}', [TujuanController::class, 'update'])->name('tujuans.update');
-
-
-    // Route::get('/tujuans/pdf/{unit}', [TujuanController::class, 'picPdf'])->name('tujuans.picPdf');
-
-
 
     // PDF export
     Route::get('/cetak-laporans', [PdfController::class, 'cetakLaporan'])->name('cetak.laporans');
