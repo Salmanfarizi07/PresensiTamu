@@ -1,4 +1,4 @@
-FROM php:8.2-cli
+FROM php:8.2-apache
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -30,6 +30,9 @@ WORKDIR /var/www/html
 
 # Copy application files
 COPY . .
+
+# Enable Apache rewrite
+RUN a2enmod rewrite
 
 # Copy project
 COPY . /var/www/html/
