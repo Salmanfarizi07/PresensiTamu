@@ -1,9 +1,25 @@
-# Stage 1: PHP + Apache
+# Stage 1: Build assets
+FROM node:18-bullseye AS build
+
+WORKDIR /app
+
+# Copy package.json & install deps
+COPY package*.json ./
+RUN npm install
+
+# Copy project frontend
+COPY . .
+
+# Build Vite assets
+RUN npm run build
+
+# Stage 2: PHP + Apache
 FROM php:8.2-apache
 
-# Set working directory
+# Working directory
 WORKDIR /var/www/html
 
+# Install dependencies untuk Laravel
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -13,50 +29,27 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libzip-dev \
     zip \
-    build-essential \
-    pkg-config \
-    libssl-dev \
-    zlib1g-dev \
-    libcurl4-openssl-dev \
     libicu-dev \
+    pkg-config \
+    zlib1g-dev \
+    libssl-dev \
     && docker-php-ext-install pdo_mysql mbstring tokenizer xml ctype zip intl
 
-
-RUN docker-php-ext-install pdo_mysql
-RUN docker-php-ext-install mbstring
-RUN docker-php-ext-install tokenizer
-RUN docker-php-ext-install xml
-RUN docker-php-ext-install ctype
-RUN docker-php-ext-install zip
-
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install Node.js & npm
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs
-
-# Enable Apache mod_rewrite
+# Enable Apache rewrite module
 RUN a2enmod rewrite
 
-# Copy composer.lock and composer.json first (cache optimization)
-COPY composer.lock composer.json ./
-
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
-
-# Copy project files
+# Copy PHP project
 COPY . .
 
-# Install Node dependencies & build Vite assets
-RUN npm install
-RUN npm run build
+# Copy build assets dari stage 1
+COPY --from=build /app/public/build ./public/build
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
 # Expose port Apache
 EXPOSE 80
