@@ -1,32 +1,55 @@
-FROM php:8.2-apache
+FROM php:8.2-cli
 
-# Install dependency system
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    unzip git curl libpng-dev libonig-dev libxml2-dev zip libzip-dev \
-    && docker-php-ext-configure zip \
-    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip
+    git \
+    curl \
+    unzip \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libzip-dev \
+    libsodium-dev \
+    libpq-dev \
+    default-mysql-client \
+    default-libmysqlclient-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo_pgsql pdo_mysql mbstring exif pcntl bcmath gd zip sodium
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Get Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy project
-COPY . /var/www/html
+# Install Node.js and npm
+RUN curl -sl https://deb.nodesource.com/setup_18.x | bash && \
+    apt-get update && apt-get install -y nodejs
+
+# Set working directory
 WORKDIR /var/www/html
 
-# Install dependensi Laravel
-RUN composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
+# Copy application files
+COPY . .
 
-# Cache config Laravel
-RUN php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache
+# Copy project
+COPY . /var/www/html/
 
-# Set permission
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Set document root ke public
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 
-# Pakai port Railway 9000
-ENV PORT=9000
-RUN sed -i "s/80/${PORT}/g" /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf
+# Enable rewrite module
+RUN a2enmod rewrite
 
-EXPOSE ${PORT}
-CMD ["apache2-foreground"]
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Expose port used by `php artisan serve`
+EXPOSE 8000
+
+# Install PHP and JS dependencies
+RUN composer install
+RUN npm install
+
+# Run Laravel migrations and start server
+CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000
