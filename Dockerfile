@@ -5,6 +5,7 @@ FROM php:8.2-apache
 WORKDIR /var/www/html
 
 # Install dependencies Linux & PHP extensions
+# Update dan install OS dependencies
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -14,9 +15,14 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libzip-dev \
     zip \
-    npm \
+    build-essential \
     && docker-php-ext-install pdo_mysql mbstring tokenizer xml ctype zip
 
+# Install Node.js & npm
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
+
+    
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
