@@ -3,6 +3,8 @@
 use App\Models\Zone;
 use App\Models\Tujuan;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\DashboardController;
@@ -123,7 +125,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 Route::post('/test-submit', function(Request $request){
-    \Log::info($request->all());
     return response()->json(['success' => true]);
 });
 

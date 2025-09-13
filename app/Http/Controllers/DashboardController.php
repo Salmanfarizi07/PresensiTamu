@@ -1,9 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Auth;      // Auth::check(), Auth::logout()
+use Illuminate\Support\Facades\Log;       // Log::info(), Log::error()
+use Illuminate\Support\Facades\DB;        // DB::query(), DB::raw()
+use Illuminate\Support\Facades\Cache;     // Cache::get(), Cache::put()
+use Illuminate\Support\Facades\Redirect;  // redirect() helper
+use Illuminate\Support\Facades\Storage;   // Storage::disk()->put()
+use Illuminate\Support\Facades\Mail;      // Mail::send()
+use Illuminate\Http\Request;              // Request $request
+use Illuminate\Http\Response;             // Response::json(), Response::download()
 
-use Illuminate\Http\Request;
 use App\Models\Submission;
+use App\Models\Laporan;
 use App\Models\Zone;
 
 
