@@ -15,13 +15,6 @@ use App\Http\Controllers\TujuanController;
 
 
 
-Route::get('/railway-test', function () {
-    return 'OK RAILWAY';
-});
-
-
-
-
 // Landing page
 Route::get('/', function () {
     $tujuans = Tujuan::orderBy('unit')->orderBy('nama')->get();

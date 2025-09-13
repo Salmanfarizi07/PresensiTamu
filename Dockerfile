@@ -22,12 +22,13 @@ RUN php artisan config:cache \
     && php artisan view:cache
 
 # Set permission
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-EXPOSE 80
-
-# biar Apache/nginx/php-fpm pakai port Railway
+# Pakai port Railway
 ENV PORT=${PORT:-8080}
 RUN sed -i "s/80/${PORT}/g" /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf
+RUN sed -i 's#/var/www/html#/var/www/html/public#g' /etc/apache2/sites-available/000-default.conf
+
 EXPOSE ${PORT}
 CMD ["apache2-foreground"]
