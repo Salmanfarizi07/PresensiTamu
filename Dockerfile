@@ -1,5 +1,5 @@
 # Stage 1: Build assets
-FROM node:18-bullseye AS build
+FROM php:8.2-apache-buster
 
 WORKDIR /app
 
@@ -20,7 +20,7 @@ FROM php:8.2-apache
 WORKDIR /var/www/html
 
 # Install dependencies untuk Laravel
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     unzip \
     curl \
@@ -29,11 +29,14 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libzip-dev \
     zip \
-    libicu-dev \
+    build-essential \
     pkg-config \
     zlib1g-dev \
+    libicu-dev \
     libssl-dev \
-    && docker-php-ext-install pdo_mysql mbstring tokenizer xml ctype zip intl
+    && docker-php-ext-configure zip \
+    && docker-php-ext-install pdo_mysql mbstring tokenizer xml ctype zip intl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Enable Apache rewrite module
 RUN a2enmod rewrite
