@@ -13,6 +13,9 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TujuanController;
 
+Route::get('/railway-test', function () {
+    return 'Laravel berjalan!';
+});
 
 
 // Landing page
